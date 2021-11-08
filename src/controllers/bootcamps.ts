@@ -18,14 +18,14 @@ exports.getBootcamp = function (req: Request, res: Response) {
 };
 
 // @desc      Create a bootcamp
-// @route     GET /api/v1/bootcamps
+// @route     POST /api/v1/bootcamps
 // @access    Public
 exports.createBootcamp = function (req: Request, res: Response) {
   res.status(201).json({ success: true, msg: "Create a new bootacamp" });
 };
 
 // @desc      Update a bootcamp
-// @route     GET /api/v1/bootcamps/:id
+// @route     PUT /api/v1/bootcamps/:id
 // @access    Public
 exports.updateBootcamp = function (req: Request, res: Response) {
   res.status(200).json({
@@ -35,7 +35,7 @@ exports.updateBootcamp = function (req: Request, res: Response) {
 };
 
 // @desc      Delete a bootcamp
-// @route     GET /api/v1/bootcamps/:id
+// @route     DELETE /api/v1/bootcamps/:id
 // @access    Public
 exports.deleteBootcamp = function (req: Request, res: Response) {
   res.status(200).json({
