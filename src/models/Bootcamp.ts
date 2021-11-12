@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 
 interface Location {
   type: string;
@@ -11,7 +11,7 @@ interface Location {
   country: string;
 }
 
-interface Bootcamp {
+interface Props {
   name: string;
   slug?: string;
   description: string;
@@ -31,7 +31,7 @@ interface Bootcamp {
   createdAt?: Date;
 }
 
-const schema = new Schema<Bootcamp>({
+const schema = new Schema<Props>({
   name: {
     type: String,
     required: [true, "please add a name"],
@@ -131,4 +131,6 @@ const schema = new Schema<Bootcamp>({
   },
 });
 
-export default model<Bootcamp>("Bootcamp", schema);
+const Bootcamp = model<Props>("Bootcamp", schema);
+
+export default Bootcamp;

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Bootcamp from "../models/Bootcamp";
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
@@ -20,8 +21,9 @@ export function getBootcamp(req: Request, res: Response) {
 // @desc      Create a bootcamp
 // @route     POST /api/v1/bootcamps
 // @access    Public
-export function createBootcamp(req: Request, res: Response) {
-  res.status(201).json({ success: true, msg: "Create a new bootacamp" });
+export async function createBootcamp(req: Request, res: Response) {
+  const bootcamp = await Bootcamp.create(req.body);
+  res.status(201).json({ success: true, data: bootcamp });
 }
 
 // @desc      Update a bootcamp
