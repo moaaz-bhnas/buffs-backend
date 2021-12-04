@@ -39,10 +39,7 @@ const schema = new Schema<Props>({
     trim: true,
     maxlength: [50, "name can not be more than 50 characters"],
   },
-  slug: {
-    type: String,
-    unique: true,
-  },
+  slug: String,
   description: {
     type: String,
     required: [true, "please add a description"],
