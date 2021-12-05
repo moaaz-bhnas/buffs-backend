@@ -15,9 +15,9 @@ const app: Application = express();
 // `.use()` for middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // body parser
-if (process.env.NODE_ENV) {
-  app.use(morgan("dev")); // DEV logging middleware
-}
+// if (process.env.NODE_ENV) {
+//   app.use(morgan("dev")); // DEV logging middleware
+// }
 app.use("/api/v1/bootcamps", bootacamps);
 
 const PORT = process.env.PORT || 5000;

@@ -3,45 +3,12 @@ import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
 import Bootcamp from "../../models/Bootcamp";
-import { ObjectId } from "mongodb";
-
-const bootcamp = {
-  _id: "5d725a037b292f5f8ceff787",
-  user: "5c8a1d5b0190b214360dc031",
-  name: "Codemasters",
-  description:
-    "Is coding your passion? Codemasters will give you the skills and the tools to become the best developer possible. We specialize in full stack web development and data science",
-  website: "https://codemasters.com",
-  phone: "(333) 333-3333",
-  email: "enroll@codemasters.com",
-  address: "85 South Prospect Street Burlington VT 05405",
-  careers: ["Web Development", "Data Science", "Business"],
-  housing: false,
-  jobAssistance: false,
-  jobGuarantee: false,
-  acceptGi: false,
-};
-
-const bootcampWithoutName = {
-  _id: "5d725a037b292f5f8ceff787",
-  user: "5c8a1d5b0190b214360dc031",
-  description:
-    "Is coding your passion? Codemasters will give you the skills and the tools to become the best developer possible. We specialize in full stack web development and data science",
-  website: "https://codemasters.com",
-  phone: "(333) 333-3333",
-  email: "enroll@codemasters.com",
-  address: "85 South Prospect Street Burlington VT 05405",
-  careers: ["Web Development", "Data Science", "Business"],
-  housing: false,
-  jobAssistance: false,
-  jobGuarantee: false,
-  acceptGi: false,
-};
 
 // @desc      Get all bootcamps
 describe("GET /api/v1/bootcamps", () => {
   it("should respond with a (200: ok) status code", async () => {
     const response = await request(app).get("/api/v1/bootcamps");
+
     expect(response.statusCode).to.equal(200);
   });
 
@@ -55,30 +22,85 @@ describe("GET /api/v1/bootcamps", () => {
 
 // @desc      Get a single bootcamp
 describe("GET /api/v1/bootcamps/:id", () => {
-  describe("bootcamp id exists", () => {
+  describe("document exists", () => {
+    const documentId = "61acc4bf4b79906525e8a34f";
+
     it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).get("/api/v1/bootcamps/1");
+      const response = await request(app).get(
+        `/api/v1/bootcamps/${documentId}`
+      );
       expect(response.statusCode).to.equal(200);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).get("/api/v1/bootcamps/1");
+      const response = await request(app).get(
+        `/api/v1/bootcamps/${documentId}`
+      );
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
     });
   });
 
-  // describe("bootcamp id doesn't exist", () => {});
+  describe("document doesn't exist", () => {
+    const nonExistentId = "5d713995b721c3bb38c1f5d0";
+
+    it("should respond with a (404: not found) status code", async () => {
+      const response = await request(app).get(
+        `/api/v1/bootcamps/${nonExistentId}`
+      );
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app).get(
+        `/api/v1/bootcamps/${nonExistentId}`
+      );
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
+  });
 });
 
 // @desc      Create a bootcamp
 describe("POST /api/v1/bootcamps", () => {
+  const bootcamp = {
+    user: "5d7a514b5d2c12c7449be045",
+    name: "Devworks Bootcamp",
+    description:
+      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+    website: "https://devworks.com",
+    phone: "(111) 111-1111",
+    email: "enroll@devworks.com",
+    address: "233 Bay State Rd Boston MA 02215",
+    careers: ["Web Development", "UI/UX", "Business"],
+    housing: true,
+    jobAssistance: true,
+    jobGuarantee: false,
+    acceptGi: true,
+  };
+
+  const bootcampWithoutName = {
+    user: "5d7a514b5d2c12c7449be045",
+    description:
+      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+    website: "https://devworks.com",
+    phone: "(111) 111-1111",
+    email: "enroll@devworks.com",
+    address: "233 Bay State Rd Boston MA 02215",
+    careers: ["Web Development", "UI/UX", "Business"],
+    housing: true,
+    jobAssistance: true,
+    jobGuarantee: false,
+    acceptGi: true,
+  };
+
   describe("document with all required fields", () => {
     // runs after each test in this block
     afterEach(async function () {
       await Bootcamp.deleteOne({
-        _id: new ObjectId(bootcamp._id),
+        name: bootcamp.name,
       });
     });
 
