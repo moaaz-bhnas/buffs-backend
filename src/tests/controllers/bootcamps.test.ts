@@ -65,38 +65,23 @@ describe("GET /api/v1/bootcamps/:id", () => {
 
 // @desc      Create a bootcamp
 describe("POST /api/v1/bootcamps", () => {
-  const bootcamp = {
-    user: "5d7a514b5d2c12c7449be045",
-    name: "Devworks Bootcamp",
-    description:
-      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
-    website: "https://devworks.com",
-    phone: "(111) 111-1111",
-    email: "enroll@devworks.com",
-    address: "233 Bay State Rd Boston MA 02215",
-    careers: ["Web Development", "UI/UX", "Business"],
-    housing: true,
-    jobAssistance: true,
-    jobGuarantee: false,
-    acceptGi: true,
-  };
-
-  const bootcampWithoutName = {
-    user: "5d7a514b5d2c12c7449be045",
-    description:
-      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
-    website: "https://devworks.com",
-    phone: "(111) 111-1111",
-    email: "enroll@devworks.com",
-    address: "233 Bay State Rd Boston MA 02215",
-    careers: ["Web Development", "UI/UX", "Business"],
-    housing: true,
-    jobAssistance: true,
-    jobGuarantee: false,
-    acceptGi: true,
-  };
-
   describe("document with all required fields", () => {
+    const bootcamp = {
+      user: "5d7a514b5d2c12c7449be045",
+      name: "Devworks Bootcamp",
+      description:
+        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+      website: "https://devworks.com",
+      phone: "(111) 111-1111",
+      email: "enroll@devworks.com",
+      address: "233 Bay State Rd Boston MA 02215",
+      careers: ["Web Development", "UI/UX", "Business"],
+      housing: true,
+      jobAssistance: true,
+      jobGuarantee: false,
+      acceptGi: true,
+    };
+
     // runs after each test in this block
     afterEach(async function () {
       await Bootcamp.deleteOne({
@@ -122,6 +107,21 @@ describe("POST /api/v1/bootcamps", () => {
   });
 
   describe("required field is missing (name)", () => {
+    const bootcampWithoutName = {
+      user: "5d7a514b5d2c12c7449be045",
+      description:
+        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+      website: "https://devworks.com",
+      phone: "(111) 111-1111",
+      email: "enroll@devworks.com",
+      address: "233 Bay State Rd Boston MA 02215",
+      careers: ["Web Development", "UI/UX", "Business"],
+      housing: true,
+      jobAssistance: true,
+      jobGuarantee: false,
+      acceptGi: true,
+    };
+
     it("should respond with a (400: bad request) status code", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
