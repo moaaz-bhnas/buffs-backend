@@ -22,6 +22,22 @@ const bootcamp = {
   acceptGi: false,
 };
 
+const bootcampWithoutName = {
+  _id: "5d725a037b292f5f8ceff787",
+  user: "5c8a1d5b0190b214360dc031",
+  description:
+    "Is coding your passion? Codemasters will give you the skills and the tools to become the best developer possible. We specialize in full stack web development and data science",
+  website: "https://codemasters.com",
+  phone: "(333) 333-3333",
+  email: "enroll@codemasters.com",
+  address: "85 South Prospect Street Burlington VT 05405",
+  careers: ["Web Development", "Data Science", "Business"],
+  housing: false,
+  jobAssistance: false,
+  jobGuarantee: false,
+  acceptGi: false,
+};
+
 // @desc      Get all bootcamps
 describe("GET /api/v1/bootcamps", () => {
   it("should respond with a (200: ok) status code", async () => {
@@ -58,27 +74,47 @@ describe("GET /api/v1/bootcamps/:id", () => {
 
 // @desc      Create a bootcamp
 describe("POST /api/v1/bootcamps", () => {
-  // runs after each test in this block
-  afterEach(async function () {
-    await Bootcamp.deleteOne({
-      _id: new ObjectId(bootcamp._id),
+  describe("document with all required fields", () => {
+    // runs after each test in this block
+    afterEach(async function () {
+      await Bootcamp.deleteOne({
+        _id: new ObjectId(bootcamp._id),
+      });
+    });
+
+    it("should respond with a (201: created) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+      expect(response.statusCode).to.equal(201);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
     });
   });
 
-  it("should respond with a (201: created) status code", async () => {
-    const response = await request(app)
-      .post("/api/v1/bootcamps")
-      .send(bootcamp);
-    expect(response.statusCode).to.equal(201);
-  });
+  describe("required field is missing (name)", () => {
+    it("should respond with a (400: bad request) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcampWithoutName);
+      expect(response.statusCode).to.equal(400);
+    });
 
-  it("should respond with json", async () => {
-    const response = await request(app)
-      .post("/api/v1/bootcamps")
-      .send(bootcamp);
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcampWithoutName);
 
-    expect(response.headers["content-type"]).to.include("json");
-    expect(response.body.success).to.equal(true);
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
   });
 });
 

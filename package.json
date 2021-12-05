@@ -7,8 +7,8 @@
     "start": "NODE_ENV=production node public/server.js",
     "dev": "npx nodemon src/server.ts",
     "build": "tsc -p .",
-    "test": "mocha -r ts-node/register src/tests/**/*.ts",
-    "test:watch": "mocha -r ts-node/register --watch src/tests/**/*.ts"
+    "test": "mocha -r ts-node/register --timeout 10000 src/tests/**/*.ts",
+    "test:watch": "mocha -r ts-node/register --watch --timeout 10000 src/tests/**/*.ts"
   },
   "author": "moaaz-bhnas",
   "license": "MIT",
