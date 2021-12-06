@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Bootcamp from "../models/Bootcamp";
-import { ObjectId } from "mongodb";
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
@@ -45,19 +44,26 @@ export async function createBootcamp(req: Request, res: Response) {
 // @desc      Update a bootcamp
 // @route     PUT /api/v1/bootcamps/:id
 // @access    Public
-export function updateBootcamp(req: Request, res: Response) {
-  res.status(200).json({
-    success: true,
-    msg: `Update a bootacamp with id: ${req.params.id}`,
-  });
+export async function updateBootcamp(req: Request, res: Response) {
+  try {
+    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({ success: true, data: bootcamp });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 }
 
 // @desc      Delete a bootcamp
 // @route     DELETE /api/v1/bootcamps/:id
 // @access    Public
-export function deleteBootcamp(req: Request, res: Response) {
-  res.status(200).json({
-    success: true,
-    msg: `Delete a bootacamp with id: ${req.params.id}`,
-  });
+export async function deleteBootcamp(req: Request, res: Response) {
+  try {
+    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, data: bootcamp });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 }

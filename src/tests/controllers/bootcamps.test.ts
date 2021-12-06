@@ -3,6 +3,7 @@ import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
 import Bootcamp from "../../models/Bootcamp";
+import { Document } from "mongoose";
 
 // @desc      Get all bootcamps
 describe("GET /api/v1/bootcamps", () => {
@@ -142,33 +143,90 @@ describe("POST /api/v1/bootcamps", () => {
 
 // @desc      Update a bootcamp
 describe("PUT /api/v1/bootcamps/:id", () => {
-  describe("bootcamp id exists", () => {
-    it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).put("/api/v1/bootcamps/1");
-      expect(response.statusCode).to.equal(200);
-    });
+  const bootcamp = {
+    user: "5d7a514b5d2c12c7449be045",
+    name: "Devworks Bootcamp",
+    description:
+      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+    website: "https://devworks.com",
+    phone: "(111) 111-1111",
+    email: "enroll@devworks.com",
+    address: "233 Bay State Rd Boston MA 02215",
+    careers: ["Web Development", "UI/UX", "Business"],
+    housing: true,
+    jobAssistance: true,
+    jobGuarantee: false,
+    acceptGi: true,
+  };
 
-    it("should respond with json", async () => {
-      const response = await request(app).put("/api/v1/bootcamps/1");
-
-      expect(response.headers["content-type"]).to.include("json");
-      expect(response.body.success).to.equal(true);
+  afterEach(async function () {
+    await Bootcamp.deleteOne({
+      name: bootcamp.name,
     });
   });
 
-  // describe("bootcamp id doesn't exist", () => {});
+  it("should respond with a (200: ok) status code", async () => {
+    const createResponse = await request(app)
+      .post("/api/v1/bootcamps")
+      .send(bootcamp);
+    const updateResponse = await request(app)
+      .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
+      .send({ jobAssistance: false });
+    expect(updateResponse.statusCode).to.equal(200);
+  });
+
+  it("should respond with json", async () => {
+    const createResponse = await request(app)
+      .post("/api/v1/bootcamps")
+      .send(bootcamp);
+    const updateResponse = await request(app)
+      .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
+      .send({ jobAssistance: false });
+    expect(updateResponse.headers["content-type"]).to.include("json");
+    expect(updateResponse.body.success).to.equal(true);
+  });
 });
 
 // @desc      Delete a bootcamp
 describe("DELETE /api/v1/bootcamps/:id", () => {
   describe("bootcamp id exists", () => {
+    const bootcamp = {
+      user: "5d7a514b5d2c12c7449be045",
+      name: "Devworks Bootcamp",
+      description:
+        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+      website: "https://devworks.com",
+      phone: "(111) 111-1111",
+      email: "enroll@devworks.com",
+      address: "233 Bay State Rd Boston MA 02215",
+      careers: ["Web Development", "UI/UX", "Business"],
+      housing: true,
+      jobAssistance: true,
+      jobGuarantee: false,
+      acceptGi: true,
+    };
+
+    let idToDelete: string;
+
+    beforeEach(async function () {
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+
+      idToDelete = response.body.data._id;
+    });
+
     it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).delete("/api/v1/bootcamps/1");
+      const response = await request(app).delete(
+        `/api/v1/bootcamps/${idToDelete}`
+      );
       expect(response.statusCode).to.equal(200);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).delete("/api/v1/bootcamps/1");
+      const response = await request(app).delete(
+        `/api/v1/bootcamps/${idToDelete}`
+      );
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
