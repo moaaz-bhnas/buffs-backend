@@ -29,10 +29,11 @@ export async function getBootcamp(
     if (bootcamp) {
       res.status(200).json({ success: true, data: bootcamp });
     } else {
-      next(new ErrorResponse(`Bootcamp not found with id: ${id}`, 404));
+      const error = new ErrorResponse(`Bootcamp not found with id: ${id}`, 404);
+      next(error);
     }
   } catch (error) {
-    next(new ErrorResponse(`Bootcamp not found with id: ${id}`, 404));
+    next(error);
   }
 }
 

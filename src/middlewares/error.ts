@@ -7,10 +7,19 @@ export default function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.log(error.stack?.red);
+  let errorCopy = { ...error };
+  errorCopy.message = error.message;
 
-  res.status(error.statusCode || 500).json({
+  // mongoose bad ObjectId
+  if (error.name === "CastError") {
+    const message = `resource not found with id: ${error.value}`;
+    errorCopy = new ErrorResponse(message, 404);
+  }
+
+  console.log("errorCopy: ", errorCopy);
+
+  res.status(errorCopy.statusCode || 500).json({
     success: false,
-    error: error.message || "server error",
+    error: errorCopy.message || "server error",
   });
 }
