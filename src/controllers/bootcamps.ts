@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import ErrorResponse from "../utils/errorResponse";
 import Bootcamp from "../models/Bootcamp";
 
 // @desc      Get all bootcamps
@@ -16,16 +17,22 @@ export async function getBootcamps(req: Request, res: Response) {
 // @desc      Get a single bootcamp
 // @route     GET /api/v1/bootcamps/:id
 // @access    Public
-export async function getBootcamp(req: Request, res: Response) {
+export async function getBootcamp(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
   try {
-    const bootcamp = await Bootcamp.findById(req.params.id);
+    const bootcamp = await Bootcamp.findById(id);
     if (bootcamp) {
       res.status(200).json({ success: true, data: bootcamp });
     } else {
-      res.status(404).json({ success: false });
+      next(new ErrorResponse(`Bootcamp not found with id: ${id}`, 404));
     }
   } catch (error) {
-    res.status(400).json({ success: false });
+    next(new ErrorResponse(`Bootcamp not found with id: ${id}`, 404));
   }
 }
 

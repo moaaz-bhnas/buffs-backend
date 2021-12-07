@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./db";
 import bootacamps from "./routes/bootcamps";
+import errorHandler from "./middlewares/error";
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -19,6 +20,7 @@ app.use(express.json()); // body parser
 //   app.use(morgan("dev")); // DEV logging middleware
 // }
 app.use("/api/v1/bootcamps", bootacamps);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
