@@ -143,47 +143,69 @@ describe("POST /api/v1/bootcamps", () => {
 
 // @desc      Update a bootcamp
 describe("PUT /api/v1/bootcamps/:id", () => {
-  const bootcamp = {
-    user: "5d7a514b5d2c12c7449be045",
-    name: "Devworks Bootcamp",
-    description:
-      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
-    website: "https://devworks.com",
-    phone: "(111) 111-1111",
-    email: "enroll@devworks.com",
-    address: "233 Bay State Rd Boston MA 02215",
-    careers: ["Web Development", "UI/UX", "Business"],
-    housing: true,
-    jobAssistance: true,
-    jobGuarantee: false,
-    acceptGi: true,
-  };
+  describe("document exists", () => {
+    const bootcamp = {
+      user: "5d7a514b5d2c12c7449be045",
+      name: "Devworks Bootcamp",
+      description:
+        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+      website: "https://devworks.com",
+      phone: "(111) 111-1111",
+      email: "enroll@devworks.com",
+      address: "233 Bay State Rd Boston MA 02215",
+      careers: ["Web Development", "UI/UX", "Business"],
+      housing: true,
+      jobAssistance: true,
+      jobGuarantee: false,
+      acceptGi: true,
+    };
 
-  afterEach(async function () {
-    await Bootcamp.deleteOne({
-      name: bootcamp.name,
+    afterEach(async function () {
+      await Bootcamp.deleteOne({
+        name: bootcamp.name,
+      });
+    });
+
+    it("should respond with a (200: ok) status code", async () => {
+      const createResponse = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+      const updateResponse = await request(app)
+        .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
+        .send({ jobAssistance: false });
+      expect(updateResponse.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const createResponse = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+      const updateResponse = await request(app)
+        .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
+        .send({ jobAssistance: false });
+      expect(updateResponse.headers["content-type"]).to.include("json");
+      expect(updateResponse.body.success).to.equal(true);
     });
   });
 
-  it("should respond with a (200: ok) status code", async () => {
-    const createResponse = await request(app)
-      .post("/api/v1/bootcamps")
-      .send(bootcamp);
-    const updateResponse = await request(app)
-      .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
-      .send({ jobAssistance: false });
-    expect(updateResponse.statusCode).to.equal(200);
-  });
+  describe("document doesn't exist", () => {
+    const nonExistentId = "5d713995b721c3bb38c1f5b4";
 
-  it("should respond with json", async () => {
-    const createResponse = await request(app)
-      .post("/api/v1/bootcamps")
-      .send(bootcamp);
-    const updateResponse = await request(app)
-      .put(`/api/v1/bootcamps/${createResponse.body.data._id}`)
-      .send({ jobAssistance: false });
-    expect(updateResponse.headers["content-type"]).to.include("json");
-    expect(updateResponse.body.success).to.equal(true);
+    it("should respond with a (404: not found) status code", async () => {
+      const response = await request(app)
+        .put(`/api/v1/bootcamps/${nonExistentId}`)
+        .send({ jobAssistance: false });
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .put(`/api/v1/bootcamps/${nonExistentId}`)
+        .send({ jobAssistance: false });
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
   });
 });
 
