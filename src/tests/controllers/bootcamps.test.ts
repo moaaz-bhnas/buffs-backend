@@ -3,7 +3,6 @@ import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
 import Bootcamp from "../../models/Bootcamp";
-import { Document } from "mongoose";
 
 // @desc      Get all bootcamps
 describe("GET /api/v1/bootcamps", () => {
