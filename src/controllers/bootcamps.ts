@@ -33,7 +33,10 @@ export async function getBootcamp(
     if (bootcamp) {
       res.status(200).json({ success: true, data: bootcamp });
     } else {
-      const error = new ErrorResponse(`Bootcamp not found with id: ${id}`, 404);
+      const error = new ErrorResponse({
+        message: `Bootcamp not found with id: ${id}`,
+        statusCode: 404,
+      });
       next(error);
     }
   } catch (error) {
@@ -75,7 +78,10 @@ export async function updateBootcamp(
     if (bootcamp) {
       res.status(200).json({ success: true, data: bootcamp });
     } else {
-      const error = new ErrorResponse(`Bootcamp not found with id: ${id}`, 404);
+      const error = new ErrorResponse({
+        message: `Bootcamp not found with id: ${id}`,
+        statusCode: 404,
+      });
       next(error);
     }
   } catch (error) {

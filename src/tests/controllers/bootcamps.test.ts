@@ -65,30 +65,30 @@ describe("GET /api/v1/bootcamps/:id", () => {
 
 // @desc      Create a bootcamp
 describe("POST /api/v1/bootcamps", () => {
-  describe("document with all required fields", () => {
-    const bootcamp = {
-      user: "5d7a514b5d2c12c7449be045",
-      name: "Devworks Bootcamp",
-      description:
-        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
-      website: "https://devworks.com",
-      phone: "(111) 111-1111",
-      email: "enroll@devworks.com",
-      address: "233 Bay State Rd Boston MA 02215",
-      careers: ["Web Development", "UI/UX", "Business"],
-      housing: true,
-      jobAssistance: true,
-      jobGuarantee: false,
-      acceptGi: true,
-    };
+  const bootcamp = {
+    user: "5d7a514b5d2c12c7449be045",
+    name: "Devworks Bootcamp",
+    description:
+      "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+    website: "https://devworks.com",
+    phone: "(111) 111-1111",
+    email: "enroll@devworks.com",
+    address: "233 Bay State Rd Boston MA 02215",
+    careers: ["Web Development", "UI/UX", "Business"],
+    housing: true,
+    jobAssistance: true,
+    jobGuarantee: false,
+    acceptGi: true,
+  };
 
-    // runs after each test in this block
-    afterEach(async function () {
-      await Bootcamp.deleteOne({
-        name: bootcamp.name,
-      });
+  // runs after each test in this block
+  afterEach(async function () {
+    await Bootcamp.deleteOne({
+      name: bootcamp.name,
     });
+  });
 
+  describe("document is valid", () => {
     it("should respond with a (201: created) status code", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
@@ -136,6 +136,18 @@ describe("POST /api/v1/bootcamps", () => {
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
+    });
+  });
+
+  describe("unique field is duplicate (name)", () => {
+    it("should respond with a (400: bad request) status code", async () => {
+      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+
+      console.log("response.body: ", response.body);
+      expect(response.statusCode).to.equal(400);
     });
   });
 });
