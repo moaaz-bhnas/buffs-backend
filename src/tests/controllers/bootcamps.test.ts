@@ -57,6 +57,7 @@ describe("GET /api/v1/bootcamps/:id", () => {
         `/api/v1/bootcamps/${nonExistentId}`
       );
 
+      console.log("response.body: ", response.body);
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
     });
@@ -126,6 +127,8 @@ describe("POST /api/v1/bootcamps", () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
         .send(bootcampWithoutName);
+
+      console.log("response.body: ", response.body);
       expect(response.statusCode).to.equal(400);
     });
 
@@ -148,6 +151,16 @@ describe("POST /api/v1/bootcamps", () => {
 
       console.log("response.body: ", response.body);
       expect(response.statusCode).to.equal(400);
+    });
+
+    it("should respond with json", async () => {
+      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      const response = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
     });
   });
 });
@@ -214,6 +227,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
         .put(`/api/v1/bootcamps/${nonExistentId}`)
         .send({ jobAssistance: false });
 
+      console.log("response.body: ", response.body);
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
     });
