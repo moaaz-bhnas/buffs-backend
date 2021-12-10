@@ -236,7 +236,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
 
 // @desc      Delete a bootcamp
 describe("DELETE /api/v1/bootcamps/:id", () => {
-  describe("bootcamp id exists", () => {
+  describe("document exists", () => {
     const bootcamp = {
       user: "5d7a514b5d2c12c7449be045",
       name: "Devworks Bootcamp",
@@ -280,5 +280,25 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
     });
   });
 
-  // describe("bootcamp id doesn't exist", () => {});
+  describe("document doesn't exist", () => {
+    const nonExistentId = "5d713995b721c3bb38c1f5b4";
+
+    it("should respond with a (404: not found) status code", async () => {
+      const response = await request(app).delete(
+        `/api/v1/bootcamps/${nonExistentId}`
+      );
+
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app).delete(
+        `/api/v1/bootcamps/${nonExistentId}`
+      );
+
+      console.log("response.body: ", response.body);
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
+  });
 });

@@ -97,9 +97,19 @@ export async function deleteBootcamp(
   res: Response,
   next: NextFunction
 ) {
+  const { id } = req.params;
+
   try {
     const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, data: bootcamp });
+    if (bootcamp) {
+      res.status(200).json({ success: true, data: bootcamp });
+    } else {
+      const error = new ErrorResponse({
+        message: `Bootcamp not found with id: ${id}`,
+        statusCode: 404,
+      });
+      next(error);
+    }
   } catch (error) {
     next(error);
   }
