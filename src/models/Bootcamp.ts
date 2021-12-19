@@ -1,5 +1,7 @@
 import { Schema, model, Model } from "mongoose";
+import { Entry } from "node-geocoder";
 import slugify from "slugify";
+import geocoder from "../utils/geocoder";
 
 interface Location {
   type: string;
@@ -129,9 +131,26 @@ const schema = new Schema<Props>({
   },
 });
 
+// create "slug" for the name
 schema.pre("save", function (next) {
-  console.log("slugify ", this.name);
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// create "location" field from address
+schema.pre("save", async function (next) {
+  const location = await geocoder.geocode(this.address);
+  this.location = {
+    type: "Point",
+    coordinates: [location[0].longitude, location[0].latitude],
+    formattedAddress: location[0].formattedAddress,
+    street: location[0].streetName,
+    city: location[0].city,
+    state: location[0].state,
+    zipcode: location[0].zipcode,
+    country: location[0].country,
+  };
+  this.address = undefined;
   next();
 });
 
