@@ -23,22 +23,48 @@ describe("GET /api/v1/bootcamps", () => {
 // @desc      Get a single bootcamp
 describe("GET /api/v1/bootcamps/:id", () => {
   describe("document exists", () => {
-    const documentId = "61acc4bf4b79906525e8a34f";
+    const bootcamp = {
+      user: "5d7a514b5d2c12c7449be045",
+      name: "Devworks Bootcamp",
+      description:
+        "Devworks is a full stack JavaScript Bootcamp located in the heart of Boston that focuses on the technologies you need to get a high paying job as a web developer",
+      website: "https://devworks.com",
+      phone: "(111) 111-1111",
+      email: "enroll@devworks.com",
+      address: "233 Bay State Rd Boston MA 02215",
+      careers: ["Web Development", "UI/UX", "Business"],
+      housing: true,
+      jobAssistance: true,
+      jobGuarantee: false,
+      acceptGi: true,
+    };
+
+    afterEach(async function () {
+      await Bootcamp.deleteOne({
+        name: bootcamp.name,
+      });
+    });
 
     it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).get(
-        `/api/v1/bootcamps/${documentId}`
+      const createResponse = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+      const getResponse = await request(app).get(
+        `/api/v1/bootcamps/${createResponse.body.data._id}`
       );
-      expect(response.statusCode).to.equal(200);
+      expect(getResponse.statusCode).to.equal(200);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).get(
-        `/api/v1/bootcamps/${documentId}`
+      const createResponse = await request(app)
+        .post("/api/v1/bootcamps")
+        .send(bootcamp);
+      const getResponse = await request(app).get(
+        `/api/v1/bootcamps/${createResponse.body.data._id}`
       );
 
-      expect(response.headers["content-type"]).to.include("json");
-      expect(response.body.success).to.equal(true);
+      expect(getResponse.headers["content-type"]).to.include("json");
+      expect(getResponse.body.success).to.equal(true);
     });
   });
 

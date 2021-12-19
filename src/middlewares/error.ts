@@ -7,7 +7,7 @@ export default function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  // console.log("error: ", error, "error.name: ", error.name);
+  console.log("error: ", error, "error.name: ", error.name);
 
   let errorResponse = { ...error };
   errorResponse.message = error.message;
@@ -20,8 +20,11 @@ export default function errorHandler(
 
   // mongoose missing required field
   if (error.name === "ValidationError") {
-    const field = error.message.split(":")[1].trim();
-    const message = `required field is missing: ${field}`;
+    // const field = error.message.split(":")[1].trim();
+    // const message = `required field is missing: ${field}`;
+    const message = Object.values(error.errors)
+      .map((error) => error.message)
+      .join(", ");
     errorResponse = new ErrorResponse({ message, statusCode: 400 });
   }
 
