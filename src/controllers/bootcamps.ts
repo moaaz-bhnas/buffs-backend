@@ -12,7 +12,9 @@ export const getBootcamps = asyncHandler(async function (
   next: NextFunction
 ) {
   const bootcamps = await Bootcamp.find();
-  res.status(200).json({ success: true, data: bootcamps });
+  res
+    .status(200)
+    .json({ success: true, count: bootcamps.length, data: bootcamps });
 });
 
 // @desc      Get a single bootcamp
