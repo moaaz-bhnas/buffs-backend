@@ -1,4 +1,5 @@
 import { Schema, model, Model } from "mongoose";
+import slugify from "slugify";
 
 interface Location {
   type: string;
@@ -126,6 +127,12 @@ const schema = new Schema<Props>({
     type: Date,
     default: Date.now,
   },
+});
+
+schema.pre("save", function (next) {
+  console.log("slugify ", this.name);
+  this.slug = slugify(this.name, { lower: true });
+  next();
 });
 
 const Bootcamp = model<Props>("Bootcamp", schema);
