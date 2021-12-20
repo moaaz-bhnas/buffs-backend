@@ -6,7 +6,7 @@ import "colorts/lib/string";
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
 
-import Bootcamp from "./src/models/Bootcamp";
+import Bootcamp from "./models/Bootcamp";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
@@ -18,7 +18,7 @@ const connectDB = async () => {
 connectDB();
 
 const bootcamps: object[] = JSON.parse(
-  fs.readFileSync(`${__dirname}/src/_data/bootcamps.json`, "utf-8")
+  fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
 );
 
 console.log("bootcamps count:", bootcamps.length);

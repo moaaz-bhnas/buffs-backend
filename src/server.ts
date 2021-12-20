@@ -9,8 +9,6 @@ import errorHandler from "./middlewares/error";
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
 
-console.log("envs: ", process.env);
-
 // connect to database
 connectDB();
 
