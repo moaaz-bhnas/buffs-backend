@@ -5,6 +5,7 @@ import {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
+  getBootcampsInRadius,
 } from "../controllers/bootcamps";
 
 const router: Router = Router();
@@ -16,5 +17,7 @@ router
   .get(getBootcamp)
   .put(updateBootcamp)
   .delete(deleteBootcamp);
+
+router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
 export default router;

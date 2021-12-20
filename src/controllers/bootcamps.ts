@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import Bootcamp from "../models/Bootcamp";
 import { asyncHandler } from "../middlewares/asyncHandler";
+import geocoder from "../utils/geocoder";
+import { Entry } from "node-geocoder";
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
@@ -96,4 +98,30 @@ export const deleteBootcamp = asyncHandler(async function (
     });
     next(error);
   }
+});
+
+// @desc      Get bootcamps within a radius
+// @route     GET /api/v1/bootcamps/radius/:zipcode/:distance
+// @access    Public
+export const getBootcampsInRadius = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { zipcode, distance } = req.params;
+
+  const location: Entry[] = await geocoder.geocode(zipcode);
+  const { longitude, latitude } = location[0];
+
+  const bootcamps = await Bootcamp.find({
+    location: {
+      $geoWithin: { $centerSphere: [[longitude, latitude], distance] },
+    },
+  });
+
+  console.log("getBootcampsInRadius - bootcamps: ", bootcamps.length);
+
+  res
+    .status(200)
+    .json({ success: true, count: bootcamps.length, data: bootcamps });
 });

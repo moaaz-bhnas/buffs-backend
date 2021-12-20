@@ -328,3 +328,22 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
     });
   });
 });
+
+// @desc      Get bootcamps within a radius
+describe("GET /api/v1/bootcamps/radius/:zipcode/:distance", () => {
+  it("should respond with a (200: ok) status code", async () => {
+    const response = await request(app).get(
+      `/api/v1/bootcamps/radius/02881/1000`
+    );
+    expect(response.statusCode).to.equal(200);
+  });
+
+  it("should respond with json", async () => {
+    const response = await request(app).get(
+      `/api/v1/bootcamps/radius/02881/1000`
+    );
+
+    expect(response.headers["content-type"]).to.include("json");
+    expect(response.body.success).to.equal(true);
+  });
+});
