@@ -3,11 +3,13 @@ import "colorts/lib/string";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./db";
-import bootacamps from "./routes/bootcamps";
+import bootcamps from "./routes/bootcamps";
 import errorHandler from "./middlewares/error";
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
+
+console.log("envs: ", process.env);
 
 // connect to database
 connectDB();
@@ -19,7 +21,7 @@ app.use(express.json()); // body parser
 // if (process.env.NODE_ENV) {
 //   app.use(morgan("dev")); // DEV logging middleware
 // }
-app.use("/api/v1/bootcamps", bootacamps);
+app.use("/api/v1/bootcamps", bootcamps);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
