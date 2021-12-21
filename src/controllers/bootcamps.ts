@@ -5,15 +5,16 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 import geocoder from "../utils/geocoder";
 import { Entry } from "node-geocoder";
 
-interface QueryType {
+interface FormattedQuery {
   [key: string]: any;
+  select: string;
 }
 
 type Query = {
   select: string;
 };
 
-function addDollarSign(query: QueryType): QueryType {
+function addDollarSign(query: FormattedQuery): FormattedQuery {
   let queryString = JSON.stringify(query);
   queryString = queryString.replace(
     /\b(lt|lte|gt|gte|in)\b/g,
@@ -23,7 +24,7 @@ function addDollarSign(query: QueryType): QueryType {
   return newQuery;
 }
 
-function removeReservedProps(query: QueryType): QueryType {
+function removeReservedProps(query: FormattedQuery): FormattedQuery {
   const queryCopy = { ...query };
   const props = ["select"];
   props.forEach((prop) => delete queryCopy[prop]);
