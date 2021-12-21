@@ -58,7 +58,7 @@ export const getBootcamps = asyncHandler(async function (
   const sortBy = req.query.sortBy || "_id";
 
   // pagination
-  const page = parseInt(req.query.page) || 0;
+  const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
