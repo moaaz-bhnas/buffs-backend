@@ -5,6 +5,20 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 import geocoder from "../utils/geocoder";
 import { Entry } from "node-geocoder";
 
+interface QueryType {
+  [key: string]: any;
+}
+
+function queryWithDollarSign(query: QueryType): QueryType {
+  let queryString = JSON.stringify(query);
+  queryString = queryString.replace(
+    /\b(lt|lte|gt|gte|in)\b/g,
+    (match) => "$" + match
+  );
+  const newQuery = JSON.parse(queryString);
+  return newQuery;
+}
+
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
 // @access    Public
@@ -13,7 +27,10 @@ export const getBootcamps = asyncHandler(async function (
   res: Response,
   next: NextFunction
 ) {
-  const bootcamps = await Bootcamp.find();
+  const query = queryWithDollarSign(req.query);
+  console.log("query: ", query);
+
+  const bootcamps = await Bootcamp.find(query);
   res
     .status(200)
     .json({ success: true, count: bootcamps.length, data: bootcamps });
