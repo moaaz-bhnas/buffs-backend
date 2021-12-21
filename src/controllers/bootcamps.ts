@@ -9,7 +9,11 @@ interface QueryType {
   [key: string]: any;
 }
 
-function queryWithDollarSign(query: QueryType): QueryType {
+type Query = {
+  select: string;
+};
+
+function addDollarSign(query: QueryType): QueryType {
   let queryString = JSON.stringify(query);
   queryString = queryString.replace(
     /\b(lt|lte|gt|gte|in)\b/g,
@@ -19,18 +23,32 @@ function queryWithDollarSign(query: QueryType): QueryType {
   return newQuery;
 }
 
+function removeReservedProps(query: QueryType): QueryType {
+  const queryCopy = { ...query };
+  const props = ["select"];
+  props.forEach((prop) => delete queryCopy[prop]);
+  return queryCopy;
+}
+
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
 // @access    Public
 export const getBootcamps = asyncHandler(async function (
-  req: Request,
+  req: Request<{}, {}, {}, Query>,
   res: Response,
   next: NextFunction
 ) {
-  const query = queryWithDollarSign(req.query);
-  console.log("query: ", query);
+  let formattedQuery = removeReservedProps(req.query);
+  formattedQuery = addDollarSign(formattedQuery);
 
-  const bootcamps = await Bootcamp.find(query);
+  let selectedFields = "";
+  if (req.query.select) {
+    selectedFields = req.query.select.split(",").join(" ");
+  }
+
+  console.log("formattedQuery: ", formattedQuery);
+
+  const bootcamps = await Bootcamp.find(formattedQuery, selectedFields);
   res
     .status(200)
     .json({ success: true, count: bootcamps.length, data: bootcamps });
