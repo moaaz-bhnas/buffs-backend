@@ -83,7 +83,6 @@ describe("GET /api/v1/bootcamps/:id", () => {
         `/api/v1/bootcamps/${nonExistentId}`
       );
 
-      console.log("response.body: ", response.body);
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
     });
@@ -154,7 +153,6 @@ describe("POST /api/v1/bootcamps", () => {
         .post("/api/v1/bootcamps")
         .send(bootcampWithoutName);
 
-      console.log("response.body: ", response.body);
       expect(response.statusCode).to.equal(400);
     });
 
@@ -175,7 +173,6 @@ describe("POST /api/v1/bootcamps", () => {
         .post("/api/v1/bootcamps")
         .send(bootcamp);
 
-      console.log("response.body: ", response.body);
       expect(response.statusCode).to.equal(400);
     });
 
@@ -253,7 +250,6 @@ describe("PUT /api/v1/bootcamps/:id", () => {
         .put(`/api/v1/bootcamps/${nonExistentId}`)
         .send({ jobAssistance: false });
 
-      console.log("response.body: ", response.body);
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
     });
@@ -322,7 +318,6 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
         `/api/v1/bootcamps/${nonExistentId}`
       );
 
-      console.log("response.body: ", response.body);
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
     });
