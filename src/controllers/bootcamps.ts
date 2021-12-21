@@ -12,6 +12,9 @@ interface FormattedQuery {
 
 type Query = {
   select: string;
+  sortBy: string;
+  page: string;
+  limit: string;
 };
 
 function addDollarSign(query: FormattedQuery): FormattedQuery {
@@ -24,10 +27,12 @@ function addDollarSign(query: FormattedQuery): FormattedQuery {
   return newQuery;
 }
 
-function removeReservedProps(query: FormattedQuery): FormattedQuery {
+function removeReservedParams(
+  query: FormattedQuery,
+  params: string[]
+): FormattedQuery {
   const queryCopy = { ...query };
-  const props = ["select"];
-  props.forEach((prop) => delete queryCopy[prop]);
+  params.forEach((param) => delete queryCopy[param]);
   return queryCopy;
 }
 
@@ -39,17 +44,30 @@ export const getBootcamps = asyncHandler(async function (
   res: Response,
   next: NextFunction
 ) {
-  let formattedQuery = removeReservedProps(req.query);
+  const reservedParams = ["select", "sortBy", "page", "limit"];
+  let formattedQuery = removeReservedParams(req.query, reservedParams);
   formattedQuery = addDollarSign(formattedQuery);
-
-  let selectedFields = "";
-  if (req.query.select) {
-    selectedFields = req.query.select.split(",").join(" ");
-  }
-
   console.log("formattedQuery: ", formattedQuery);
 
-  const bootcamps = await Bootcamp.find(formattedQuery, selectedFields);
+  // projection
+  const selectedFields = req.query.select
+    ? req.query.select.split(",").join(" ")
+    : "";
+
+  // sorting
+  const sortBy = req.query.sortBy || "_id";
+
+  // pagination
+  const page = parseInt(req.query.page) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const bootcamps = await Bootcamp.find(formattedQuery)
+    .select(selectedFields)
+    .sort(sortBy)
+    .skip(skip)
+    .limit(limit);
+
   res
     .status(200)
     .json({ success: true, count: bootcamps.length, data: bootcamps });
