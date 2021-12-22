@@ -10,6 +10,13 @@ interface FormattedQuery {
   select: string;
 }
 
+interface Pagination {
+  [key: string]: {
+    page: number;
+    limit: number;
+  };
+}
+
 type Query = {
   select: string;
   sortBy: string;
@@ -47,7 +54,6 @@ export const getBootcamps = asyncHandler(async function (
   const reservedParams = ["select", "sortBy", "page", "limit"];
   let formattedQuery = removeReservedParams(req.query, reservedParams);
   formattedQuery = addDollarSign(formattedQuery);
-  console.log("formattedQuery: ", formattedQuery);
 
   // projection
   const selectedFields = req.query.select
@@ -59,18 +65,40 @@ export const getBootcamps = asyncHandler(async function (
 
   // pagination
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
+  const limit = parseInt(req.query.limit) || 25;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await Bootcamp.countDocuments();
 
   const bootcamps = await Bootcamp.find(formattedQuery)
     .select(selectedFields)
     .sort(sortBy)
-    .skip(skip)
+    .skip(startIndex)
     .limit(limit);
 
-  res
-    .status(200)
-    .json({ success: true, count: bootcamps.length, data: bootcamps });
+  // pagination: next / prev
+  const pagination: Pagination = {};
+
+  if (startIndex > 0) {
+    pagination.prev = {
+      page: page - 1,
+      limit,
+    };
+  }
+
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit,
+    };
+  }
+
+  res.status(200).json({
+    success: true,
+    count: bootcamps.length,
+    pagination,
+    data: bootcamps,
+  });
 });
 
 // @desc      Get a single bootcamp
