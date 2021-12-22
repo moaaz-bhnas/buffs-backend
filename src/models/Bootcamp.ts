@@ -1,5 +1,4 @@
-import { Schema, model, Model } from "mongoose";
-import { Entry } from "node-geocoder";
+import { Schema, model } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";
 
@@ -14,7 +13,7 @@ interface Location {
   country: string;
 }
 
-interface Props {
+interface Bootcamp {
   name: string;
   slug?: string;
   description: string;
@@ -34,7 +33,7 @@ interface Props {
   createdAt?: Date;
 }
 
-const schema = new Schema<Props>({
+const schema = new Schema<Bootcamp>({
   name: {
     type: String,
     required: [true, "please add a name"],
@@ -154,6 +153,6 @@ schema.pre("save", async function (next) {
   next();
 });
 
-const Bootcamp = model<Props>("Bootcamp", schema);
+const Bootcamp = model<Bootcamp>("Bootcamp", schema);
 
 export default Bootcamp;
