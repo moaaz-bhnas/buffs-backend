@@ -8,7 +8,7 @@ import {
   getBootcampsInRadius,
 } from "../controllers/bootcamps";
 
-const router: Router = Router();
+const router = Router();
 
 router.route("/").get(getBootcamps).post(createBootcamp);
 

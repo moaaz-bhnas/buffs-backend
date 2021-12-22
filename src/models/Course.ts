@@ -8,7 +8,7 @@ interface Course {
   minimumSkill: string;
   scholarshipAvailable?: boolean;
   createdAt?: Date;
-  bootcamp: ObjectId;
+  bootcamp: ObjectId | string;
 }
 
 const schema = new Schema<Course>({
