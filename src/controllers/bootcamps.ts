@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import Bootcamp from "../models/Bootcamp";
-import { asyncHandler } from "../middlewares/asyncHandler";
+import asyncHandler from "../middlewares/asyncHandler";
 import geocoder from "../utils/geocoder";
 import { Entry } from "node-geocoder";
 
