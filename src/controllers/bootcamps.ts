@@ -24,7 +24,7 @@ type Query = {
   limit: string;
 };
 
-function addDollarSign(query: FormattedQuery): FormattedQuery {
+function addDollarSignToOperators(query: FormattedQuery): FormattedQuery {
   let queryString = JSON.stringify(query);
   queryString = queryString.replace(
     /\b(lt|lte|gt|gte|in)\b/g,
@@ -53,7 +53,7 @@ export const getBootcamps = asyncHandler(async function (
 ) {
   const reservedParams = ["select", "sortBy", "page", "limit"];
   let formattedQuery = removeReservedParams(req.query, reservedParams);
-  formattedQuery = addDollarSign(formattedQuery);
+  formattedQuery = addDollarSignToOperators(formattedQuery);
 
   // projection
   const selectedFields = req.query.select
