@@ -7,6 +7,7 @@ import {
   deleteBootcamp,
   getBootcampsInRadius,
 } from "../controllers/bootcamps";
+import { getCourses } from "../controllers/courses";
 
 const router = Router();
 
@@ -19,5 +20,7 @@ router
   .delete(deleteBootcamp);
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
+
+router.route("/:bootcampId/courses").get(getCourses);
 
 export default router;

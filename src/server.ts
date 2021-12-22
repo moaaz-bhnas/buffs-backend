@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./db";
 import bootcamps from "./routes/bootcamps";
-import courses from "./routes/bootcamps";
+import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
 
 // Load env variables

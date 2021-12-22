@@ -14,6 +14,8 @@ export const getCourses = asyncHandler(async function (
 ) {
   let query;
 
+  console.log("req.params: ", req.params);
+
   if (req.params.bootcampId) {
     query = Course.find({ bootcamp: req.params.bootcampId });
   } else {
