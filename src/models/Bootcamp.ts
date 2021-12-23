@@ -165,11 +165,25 @@ schema.pre("save", async function (next) {
 });
 
 // cascase delete courses when their bootcamp is deleted
-schema.pre("remove", async function removeAttachedCourses(next) {
-  console.log(`Removing courses from bootcamp: ${this._id}`);
-  await this.model("Course").deleteMany({ bootcamp: this._id });
-  next();
-});
+
+/* Explaining the cycle in controllers/bootcamps: deleteBootcamp function
+- Bootcamp.findById() return a Query: https://mongoosejs.com/docs/queries.html
+- So bootcamp = Bootcamp.findById() = Query
+- To execute that query, await Query (await bootcamp)
+- so bootcamp.deleteOne is considered Query#deleteOne()
+- Query#deleteOne() triggers "deleteOne" pre hook
+- with "this" = query
+- To make "this" refer to the document, we add the 2nd argument
+*/
+schema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function removeAttachedCourses(next) {
+    console.log(`Removing courses from bootcamp: ${this._id}`);
+    await this.model("Course").deleteMany({ bootcamp: this._id });
+    next();
+  }
+);
 
 /* virtiuals
 - Basically creates a virtual field that's not included in your model

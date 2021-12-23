@@ -181,7 +181,7 @@ export const deleteBootcamp = asyncHandler(async function (
     return next(error);
   }
 
-  bootcamp.remove();
+  await bootcamp.deleteOne();
   res.status(200).json({ success: true, data: bootcamp });
 });
 
