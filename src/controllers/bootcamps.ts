@@ -74,7 +74,8 @@ export const getBootcamps = asyncHandler(async function (
     .select(selectedFields)
     .sort(sortBy)
     .skip(startIndex)
-    .limit(limit);
+    .limit(limit)
+    .populate("courses");
 
   // pagination: next / prev
   const pagination: Pagination = {};
@@ -170,16 +171,18 @@ export const deleteBootcamp = asyncHandler(async function (
 ) {
   const { id } = req.params;
 
-  const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
-  if (bootcamp) {
-    res.status(200).json({ success: true, data: bootcamp });
-  } else {
+  const bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
     const error = new ErrorResponse({
       message: `Bootcamp not found with id: ${id}`,
       statusCode: 404,
     });
-    next(error);
+    return next(error);
   }
+
+  bootcamp.remove();
+  res.status(200).json({ success: true, data: bootcamp });
 });
 
 // @desc      Get bootcamps within a radius
