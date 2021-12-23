@@ -186,7 +186,8 @@ schema.pre(
 );
 
 /* virtiuals
-- Basically creates a virtual field that's not included in your model
+- Basically creates a virtual field that's not included in your model 
+(which then u can populate in your GET request)
 - To receive in the response object, you have to add {toJson: {virtuals: true}} above in the model.
 */
 schema.virtual("courses", {
