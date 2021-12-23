@@ -7,7 +7,7 @@ import {
   deleteBootcamp,
   getBootcampsInRadius,
 } from "../controllers/bootcamps";
-import { getCourses } from "../controllers/courses";
+import coursesRouter from "./courses";
 
 const router = Router();
 
@@ -21,6 +21,7 @@ router
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
-router.route("/:bootcampId/courses").get(getCourses);
+// re-route
+router.use("/:bootcampId/courses", coursesRouter);
 
 export default router;

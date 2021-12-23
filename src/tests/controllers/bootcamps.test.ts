@@ -178,7 +178,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .put(`/api/v1/bootcamps/${bootcampId}`)
-        .send({ housing: false });
+        .send({ housing: true });
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
