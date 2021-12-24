@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import { Schema, model } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";

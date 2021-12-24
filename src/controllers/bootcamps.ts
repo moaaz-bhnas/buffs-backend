@@ -113,15 +113,15 @@ export const getBootcamp = asyncHandler(async function (
   const { id } = req.params;
 
   const bootcamp = await Bootcamp.findById(id);
-  if (bootcamp) {
-    res.status(200).json({ success: true, data: bootcamp });
-  } else {
+  if (!bootcamp) {
     const error = new ErrorResponse({
       message: `Bootcamp not found with id: ${id}`,
       statusCode: 404,
     });
-    next(error);
+    return next(error);
   }
+
+  res.status(200).json({ success: true, data: bootcamp });
 });
 
 // @desc      Create a bootcamp
@@ -150,15 +150,16 @@ export const updateBootcamp = asyncHandler(async function (
     new: true,
     runValidators: true,
   });
-  if (bootcamp) {
-    res.status(200).json({ success: true, data: bootcamp });
-  } else {
+
+  if (!bootcamp) {
     const error = new ErrorResponse({
       message: `Bootcamp not found with id: ${id}`,
       statusCode: 404,
     });
     next(error);
   }
+
+  res.status(200).json({ success: true, data: bootcamp });
 });
 
 // @desc      Delete a bootcamp

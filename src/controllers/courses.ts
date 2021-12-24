@@ -33,3 +33,27 @@ export const getCourses = asyncHandler(async function (
     data: courses,
   });
 });
+
+// @desc      Get a single courses
+// @route     GET /api/v1/courses/:id
+// @access    Public
+export const getCourse = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const course = await Course.findById(req.params.id);
+
+  if (!course) {
+    const error = new ErrorResponse({
+      message: `Course not found with id: ${req.query.id}`,
+      statusCode: 404,
+    });
+    return next(error);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: course,
+  });
+});
