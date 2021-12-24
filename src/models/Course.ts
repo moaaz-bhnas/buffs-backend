@@ -16,6 +16,7 @@ const schema = new Schema<Course>({
     type: String,
     trim: true,
     required: [true, "Please add a course title"],
+    unique: true,
   },
   description: {
     type: String,

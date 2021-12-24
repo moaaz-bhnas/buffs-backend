@@ -14,8 +14,6 @@ export const getCourses = asyncHandler(async function (
 ) {
   let query;
 
-  console.log("req.params: ", req.params);
-
   if (req.params.bootcampId) {
     query = Course.find({ bootcamp: req.params.bootcampId });
   } else {
@@ -42,7 +40,10 @@ export const getCourse = asyncHandler(async function (
   res: Response,
   next: NextFunction
 ) {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findById(req.params.id).populate({
+    path: "bootcamp",
+    select: "name description",
+  });
 
   if (!course) {
     const error = new ErrorResponse({
@@ -56,4 +57,16 @@ export const getCourse = asyncHandler(async function (
     success: true,
     data: course,
   });
+});
+
+// @desc      Create a course
+// @route     POST /api/v1/bootcamps/:bootcampId/courses
+// @access    Private
+export const createCourse = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const course = await Course.create(req.body);
+  res.status(201).json({ success: true, data: course });
 });

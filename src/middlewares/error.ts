@@ -7,7 +7,7 @@ export default function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.log("error: ", error, "error.name: ", error.name);
+  console.log("error.name: ", error.name);
 
   let errorResponse = { ...error };
   errorResponse.message = error.message;

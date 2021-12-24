@@ -131,6 +131,7 @@ const schema = new Schema<Bootcamp>(
     },
   },
   {
+    id: false,
     toJSON: {
       virtuals: true,
     },

@@ -45,7 +45,7 @@ function removeReservedParams(
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
-// @access    Public
+// @access    Public: : any user can access
 export const getBootcamps = asyncHandler(async function (
   req: Request<{}, {}, {}, Query>,
   res: Response,
@@ -126,7 +126,7 @@ export const getBootcamp = asyncHandler(async function (
 
 // @desc      Create a bootcamp
 // @route     POST /api/v1/bootcamps
-// @access    Public
+// @access    Private: Only specific users
 export const createBootcamp = asyncHandler(async function (
   req: Request,
   res: Response,
@@ -138,7 +138,7 @@ export const createBootcamp = asyncHandler(async function (
 
 // @desc      Update a bootcamp
 // @route     PUT /api/v1/bootcamps/:id
-// @access    Public
+// @access    Private
 export const updateBootcamp = asyncHandler(async function (
   req: Request,
   res: Response,
@@ -164,7 +164,7 @@ export const updateBootcamp = asyncHandler(async function (
 
 // @desc      Delete a bootcamp
 // @route     DELETE /api/v1/bootcamps/:id
-// @access    Public
+// @access    Private
 export const deleteBootcamp = asyncHandler(async function (
   req: Request,
   res: Response,
