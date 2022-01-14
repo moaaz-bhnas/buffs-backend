@@ -174,7 +174,7 @@ export const deleteBootcamp = asyncHandler(async function (
 ) {
   const { id } = req.params;
 
-  const bootcamp = await Bootcamp.findById(req.params.id);
+  const bootcamp = await Bootcamp.findById(id);
 
   if (!bootcamp) {
     const error = new ErrorResponse({

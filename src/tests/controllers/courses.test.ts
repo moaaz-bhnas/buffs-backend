@@ -213,3 +213,64 @@ describe("PUT /api/v1/courses/:id", () => {
     });
   });
 });
+
+// @desc      Delete a course
+describe("DELETE /api/v1/courses/:id", () => {
+  describe("course exists", () => {
+    const course = {
+      _id: "5d725a4a7b292f5f8ceff789",
+      title: "Front End Web Development",
+      description:
+        "This course will provide you with all of the essentials to become a successful frontend web developer. You will learn to master HTML, CSS and front end JavaScript, along with tools like Git, VSCode and front end frameworks like Vue",
+      weeks: 8,
+      tuition: 8000,
+      minimumSkill: "beginner",
+      scholarhipsAvailable: true,
+      bootcamp: "5d713995b721c3bb38c1f5d0",
+      user: "5d7a514b5d2c12c7449be045",
+    };
+
+    afterEach(async function () {
+      await request(app)
+        .post(`/api/v1/bootcamps/${course.bootcamp}/courses`)
+        .send(course);
+    });
+
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app).delete(
+        `/api/v1/courses/${course._id}`
+      );
+      expect(response.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app).delete(
+        `/api/v1/courses/${course._id}`
+      );
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
+    });
+  });
+
+  describe("course doesn't exist", () => {
+    const nonExistentId = "5d725a4a7b292f5f8cef7777";
+
+    it("should respond with a (404: not found) status code", async () => {
+      const response = await request(app).delete(
+        `/api/v1/courses/${nonExistentId}`
+      );
+
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app).delete(
+        `/api/v1/courses/${nonExistentId}`
+      );
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
+  });
+});

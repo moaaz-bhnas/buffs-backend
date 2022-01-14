@@ -111,3 +111,27 @@ export const updateCourse = asyncHandler(async function (
 
   res.status(200).json({ success: true, data: updatedCourse });
 });
+
+// @desc      Delete a course
+// @route     DELETE /api/v1/courses/:id
+// @access    Private
+export const deleteCourse = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const course = await Course.findById(id);
+
+  if (!course) {
+    const error = new ErrorResponse({
+      message: `Course not found with id: ${id}`,
+      statusCode: 404,
+    });
+    return next(error);
+  }
+
+  await course.deleteOne();
+  res.status(200).json({ success: true, data: course });
+});
