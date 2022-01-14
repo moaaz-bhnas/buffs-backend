@@ -170,3 +170,46 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     });
   });
 });
+
+// @desc      Update a course
+describe("PUT /api/v1/courses/:id", () => {
+  describe("course exists", () => {
+    const courseId = "5d725c84c4ded7bcb480eaa0";
+
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app)
+        .put(`/api/v1/courses/${courseId}`)
+        .send({ scholarshipAvailable: false });
+      expect(response.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .put(`/api/v1/courses/${courseId}`)
+        .send({ scholarshipAvailable: true });
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
+    });
+  });
+
+  describe("course doesn't exist", () => {
+    const nonExistentId = "5d725c84c4ded7bcb4800000";
+
+    it("should respond with a (404: not found) status code", async () => {
+      const response = await request(app)
+        .put(`/api/v1/courses/${nonExistentId}`)
+        .send({ scholarshipAvailable: false });
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .put(`/api/v1/courses/${nonExistentId}`)
+        .send({ scholarshipAvailable: false });
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
+  });
+});

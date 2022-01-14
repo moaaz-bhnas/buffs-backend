@@ -146,10 +146,7 @@ export const updateBootcamp = asyncHandler(async function (
 ) {
   const { id } = req.params;
 
-  const bootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const bootcamp = await Bootcamp.findById(id);
 
   if (!bootcamp) {
     const error = new ErrorResponse({
@@ -159,7 +156,12 @@ export const updateBootcamp = asyncHandler(async function (
     next(error);
   }
 
-  res.status(200).json({ success: true, data: bootcamp });
+  const updatedBootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({ success: true, data: updatedBootcamp });
 });
 
 // @desc      Delete a bootcamp

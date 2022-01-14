@@ -74,7 +74,7 @@ export const createCourse = asyncHandler(async function (
 
   if (!bootcamp) {
     const error = new ErrorResponse({
-      message: `Course not found with id: ${req.params.bootcampId}`,
+      message: `Bootcamp not found with id: ${req.params.bootcampId}`,
       statusCode: 404,
     });
     return next(error);
@@ -82,4 +82,32 @@ export const createCourse = asyncHandler(async function (
 
   const course = await Course.create(req.body);
   res.status(201).json({ success: true, data: course });
+});
+
+// @desc      Update a course
+// @route     PUT /api/v1/courses/:id
+// @access    Private
+export const updateCourse = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const course = await Course.findById(id);
+
+  if (!course) {
+    const error = new ErrorResponse({
+      message: `Course not found with id: ${id}`,
+      statusCode: 404,
+    });
+    return next(error);
+  }
+
+  const updatedCourse = await Course.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({ success: true, data: updatedCourse });
 });
