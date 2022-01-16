@@ -71,8 +71,6 @@ course.method()
 
 // static method to get average tuition of courses
 schema.statics.getAverageCost = async function (bootcampId: ObjectId | string) {
-  console.log("Calculating average cost...".blue);
-
   // "this" here refers to the model
   const averageCostObject = await this.aggregate([
     {
@@ -87,8 +85,6 @@ schema.statics.getAverageCost = async function (bootcampId: ObjectId | string) {
       },
     },
   ]);
-
-  console.log("averageCostObject[0]: ", averageCostObject[0]);
 
   try {
     const bootcampModel: Model<Bootcamp> = this.prototype.model("Bootcamp");
