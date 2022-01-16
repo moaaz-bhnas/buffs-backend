@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import "colorts/lib/string";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import fileupload from "express-fileupload";
 import connectDB from "./db";
 import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
@@ -20,6 +21,7 @@ app.use(express.json()); // body parser
 // if (process.env.NODE_ENV) {
 //   app.use(morgan("dev")); // DEV logging middleware
 // }
+app.use(fileupload());
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 app.use(errorHandler);
