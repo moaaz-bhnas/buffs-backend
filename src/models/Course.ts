@@ -1,3 +1,4 @@
+import { NextFunction } from "express";
 import { Model, model, ObjectId, Schema } from "mongoose";
 import Bootcamp from "./Bootcamp";
 
@@ -97,13 +98,15 @@ schema.statics.getAverageCost = async function (bootcampId: ObjectId | string) {
 };
 
 // call .getAverageCost() after save
-schema.post("save", function () {
+schema.post("save", function (next) {
   CourseModel.getAverageCost(this.bootcamp);
+  next();
 });
 
 // call .getAverageCost() before delete
-schema.pre("deleteOne", function () {
+schema.pre("deleteOne", function (next) {
   CourseModel.getAverageCost(this.bootcamp);
+  next();
 });
 
 const CourseModel = model<ICourse, ICourseModel>("Course", schema);
