@@ -33,7 +33,7 @@ console.log("courses count:", courses.length);
 async function importData() {
   try {
     await Bootcamp.create(bootcamps);
-    await Course.create(courses);
+    // await Course.create(courses);
     console.log("Data imported...".green.inverse);
     process.exit();
   } catch (error) {

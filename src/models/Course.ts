@@ -1,6 +1,7 @@
-import { model, ObjectId, Schema } from "mongoose";
+import { Model, model, ObjectId, Schema } from "mongoose";
+import Bootcamp from "./Bootcamp";
 
-interface Course {
+interface ICourse {
   title: string;
   description: string;
   weeks: number;
@@ -9,9 +10,14 @@ interface Course {
   scholarshipAvailable?: boolean;
   createdAt?: Date;
   bootcamp: ObjectId | string;
+  model: Function;
 }
 
-const schema = new Schema<Course>({
+interface ICourseModel extends Model<ICourse> {
+  getAverageCost(bootcampId: ObjectId | string): void;
+}
+
+const schema = new Schema<ICourse, ICourseModel>({
   title: {
     type: String,
     trim: true,
@@ -50,6 +56,60 @@ const schema = new Schema<Course>({
   },
 });
 
-const Course = model<Course>("Course", schema);
+/* 
+Statics:
+- Methods called on the actual model
+Example:
+Course.static()
 
-export default Course;
+Method:
+- called on a query.
+Example:
+const course = Course.findById()
+course.method()
+*/
+
+// static method to get average tuition of courses
+schema.statics.getAverageCost = async function (bootcampId: ObjectId | string) {
+  console.log("Calculating average cost...".blue);
+
+  // "this" here refers to the model
+  const averageCostObject = await this.aggregate([
+    {
+      $match: {
+        bootcamp: bootcampId,
+      },
+    },
+    {
+      $group: {
+        _id: "$bootcamp",
+        averageCost: { $avg: "$tuition" },
+      },
+    },
+  ]);
+
+  console.log("averageCostObject[0]: ", averageCostObject[0]);
+
+  try {
+    const bootcampModel: Model<Bootcamp> = this.prototype.model("Bootcamp");
+    await bootcampModel.findByIdAndUpdate(bootcampId, {
+      averageCost: Math.ceil(averageCostObject[0].averageCost),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// call .getAverageCost() after save
+schema.post("save", function () {
+  CourseModel.getAverageCost(this.bootcamp);
+});
+
+// call .getAverageCost() before delete
+schema.pre("deleteOne", function () {
+  CourseModel.getAverageCost(this.bootcamp);
+});
+
+const CourseModel = model<ICourse, ICourseModel>("Course", schema);
+
+export default CourseModel;
