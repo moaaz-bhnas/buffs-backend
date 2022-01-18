@@ -6,6 +6,8 @@ declare global {
       MONGO_URI: string;
       GEOCODER_PROVIDER: string;
       GEOCODER_API_KEY: string;
+      FILE_UPLOAD_PATH: string;
+      MAX_FILE_UPLOAD: number; // in bytes 1mb = 1000000byte
     }
   }
 }

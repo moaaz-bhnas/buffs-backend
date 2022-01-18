@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import path from "path";
 import ErrorResponse from "../utils/errorResponse";
 import Bootcamp from "../models/Bootcamp";
 import asyncHandler from "../middlewares/asyncHandler";
@@ -231,16 +232,44 @@ export const uploadBootcampPhoto = asyncHandler(async function (
       message: `Bootcamp not found with id: ${id}`,
       statusCode: 404,
     });
-    next(error);
+    return next(error);
   }
 
-  if (!req.file) {
+  const { file } = req;
+  if (!file) {
     const error = new ErrorResponse({
       message: `Please upload a file`,
       statusCode: 400,
     });
-    next(error);
+    return next(error);
   }
 
-  console.log("req.file: ", req.file);
+  if (!file.mimetype.startsWith("image")) {
+    const error = new ErrorResponse({
+      message: `Please upload an image file`,
+      statusCode: 400,
+    });
+    return next(error);
+  }
+
+  if (file.size > Number(process.env.MAX_FILE_UPLOAD)) {
+    const error = new ErrorResponse({
+      message: `Please upload an image less than ${
+        Number(process.env.MAX_FILE_UPLOAD) / 1000000
+      } mb`,
+      statusCode: 400,
+    });
+    return next(error);
+  }
+
+  file.filename = `photo-${bootcamp._id}${path.parse(file.originalname).ext}`;
+
+  console.log("file.filename: ", file.filename);
+
+  await Bootcamp.findByIdAndUpdate(id, { photo: file.filename });
+
+  res.status(200).json({
+    success: true,
+    data: file.filename,
+  });
 });

@@ -6,6 +6,7 @@ import connectDB from "./db";
 import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
+import path from "path";
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -24,11 +25,20 @@ const app: Application = express();
 // `.use()` for middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // body parser
+
+// logging
 // if (process.env.NODE_ENV) {
 //   app.use(morgan("dev")); // DEV logging middleware
 // }
+
+// set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// mount routers
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
+
+// error handling
 app.use(errorHandler);
 
 const PORT = process.env.PORT;

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import multer from "multer";
 import {
   getBootcamps,
   getBootcamp,
@@ -9,9 +8,8 @@ import {
   getBootcampsInRadius,
   uploadBootcampPhoto,
 } from "../controllers/bootcamps";
+import multerUpload from "../middlewares/multerUpload";
 import coursesRouter from "./courses";
-
-const upload = multer({ dest: "uploads/" });
 
 const router = Router();
 
@@ -25,10 +23,11 @@ router
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
-// router.route("/:id/photo").put(uploadBootcampPhoto);
-router
-  .route("/:id/photo")
-  .put(upload.single("bootcamp-photo"), uploadBootcampPhoto);
+// router
+//   .route("/:id/photo")
+//   .put(upload.single("bootcamp-photo"), uploadBootcampPhoto);
+
+router.route("/:id/photo").put(multerUpload, uploadBootcampPhoto);
 
 // re-route
 router.use("/:bootcampId/courses", coursesRouter);
