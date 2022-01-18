@@ -13,13 +13,13 @@
   "author": "moaaz-bhnas",
   "license": "MIT",
   "dependencies": {
-    "@types/express-fileupload": "^1.2.2",
+    "@types/multer": "^1.4.7",
     "colorts": "^0.1.63",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-fileupload": "^1.2.1",
     "mongoose": "^6.0.12",
     "morgan": "^1.10.0",
+    "multer": "^1.4.4",
     "node-geocoder": "^3.28.0",
     "slugify": "^1.6.4"
   },

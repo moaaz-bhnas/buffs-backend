@@ -289,3 +289,22 @@ describe("GET /api/v1/bootcamps/radius/:zipcode/:distance", () => {
     expect(response.body.success).to.equal(true);
   });
 });
+
+// @desc      Upload photo for bootcamp
+describe("PUT /api/v1/bootcamps/:id", () => {
+  it("should respond with a (200: ok) status code", async () => {
+    const response = await request(app)
+      .put(`/api/v1/bootcamps/5d713a66ec8f2b88b8f830b8/photo`)
+      .send();
+    expect(response.statusCode).to.equal(200);
+  });
+
+  it("should respond with json", async () => {
+    const response = await request(app)
+      .put(`/api/v1/bootcamps/5d713a66ec8f2b88b8f830b8/photo`)
+      .send();
+
+    expect(response.headers["content-type"]).to.include("json");
+    expect(response.body.success).to.equal(true);
+  });
+});

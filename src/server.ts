@@ -2,7 +2,6 @@ import express, { Application } from "express";
 import "colorts/lib/string";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import fileupload from "express-fileupload";
 import connectDB from "./db";
 import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
@@ -15,13 +14,19 @@ dotenv.config({ path: "./config/config.env" });
 connectDB();
 
 const app: Application = express();
+
+/* Middlewares:
+- Middleware functions are functions that have access to the request object (req), the response object (res), and the next function in the application’s request-response cycle. The next function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.
+- Soruce: https://expressjs.com/en/guide/writing-middleware.html
+- "middlewares are generally used to transform a request or response object, before it reaches to other middlewares." - https://stackoverflow.com/a/30408863/7982963
+*/
+
 // `.use()` for middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // body parser
 // if (process.env.NODE_ENV) {
 //   app.use(morgan("dev")); // DEV logging middleware
 // }
-app.use(fileupload());
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 app.use(errorHandler);

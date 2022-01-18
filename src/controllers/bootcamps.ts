@@ -213,3 +213,34 @@ export const getBootcampsInRadius = asyncHandler(async function (
     .status(200)
     .json({ success: true, count: bootcamps.length, data: bootcamps });
 });
+
+// @desc      Upload photo for bootcamp
+// @route     PUT /api/v1/bootcamps/:id/photo
+// @access    Private
+export const uploadBootcampPhoto = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const bootcamp = await Bootcamp.findById(id);
+
+  if (!bootcamp) {
+    const error = new ErrorResponse({
+      message: `Bootcamp not found with id: ${id}`,
+      statusCode: 404,
+    });
+    next(error);
+  }
+
+  if (!req.file) {
+    const error = new ErrorResponse({
+      message: `Please upload a file`,
+      statusCode: 400,
+    });
+    next(error);
+  }
+
+  console.log("req.file: ", req.file);
+});
