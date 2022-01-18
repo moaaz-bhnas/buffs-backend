@@ -23,10 +23,6 @@ router
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
-// router
-//   .route("/:id/photo")
-//   .put(upload.single("bootcamp-photo"), uploadBootcampPhoto);
-
 router.route("/:id/photo").put(multerUpload, uploadBootcampPhoto);
 
 // re-route
