@@ -262,9 +262,9 @@ export const uploadBootcampPhoto = asyncHandler(async function (
     return next(error);
   }
 
-  file.filename = `photo-${bootcamp._id}${path.parse(file.originalname).ext}`;
-
-  console.log("file.filename: ", file.filename);
+  file.filename = `bootcamp-${bootcamp._id}${
+    path.parse(file.originalname).ext
+  }`;
 
   await Bootcamp.findByIdAndUpdate(id, { photo: file.filename });
 
