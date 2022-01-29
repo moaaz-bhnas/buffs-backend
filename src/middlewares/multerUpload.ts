@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import upload from "../multer";
 
+// makes req.file available
 export default function multerUpload(
   req: Request,
   res: Response,
