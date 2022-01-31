@@ -8,12 +8,17 @@ import {
   getBootcampsInRadius,
   uploadBootcampPhoto,
 } from "../controllers/bootcamps";
+import advancedResults from "../middlewares/advancedResults";
 import multerUpload from "../middlewares/multerUpload";
+import Bootcamp from "../models/Bootcamp";
 import coursesRouter from "./courses";
 
 const router = Router();
 
-router.route("/").get(getBootcamps).post(createBootcamp);
+router
+  .route("/")
+  .get(advancedResults(Bootcamp, "courses"), getBootcamps)
+  .post(createBootcamp);
 
 router
   .route("/:id")

@@ -6,101 +6,15 @@ import asyncHandler from "../middlewares/asyncHandler";
 import geocoder from "../utils/geocoder";
 import { Entry } from "node-geocoder";
 
-interface FormattedQuery {
-  [key: string]: any;
-  select: string;
-}
-
-interface Pagination {
-  [key: string]: {
-    page: number;
-    limit: number;
-  };
-}
-
-type Query = {
-  select: string;
-  sortBy: string;
-  page: string;
-  limit: string;
-};
-
-function addDollarSignToOperators(query: FormattedQuery): FormattedQuery {
-  let queryString = JSON.stringify(query);
-  queryString = queryString.replace(
-    /\b(lt|lte|gt|gte|in)\b/g,
-    (match) => "$" + match
-  );
-  const newQuery = JSON.parse(queryString);
-  return newQuery;
-}
-
-function removeReservedParams(
-  query: FormattedQuery,
-  params: string[]
-): FormattedQuery {
-  const queryCopy = { ...query };
-  params.forEach((param) => delete queryCopy[param]);
-  return queryCopy;
-}
-
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
 // @access    Public: : any user can access
 export const getBootcamps = asyncHandler(async function (
-  req: Request<{}, {}, {}, Query>,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const reservedParams = ["select", "sortBy", "page", "limit"];
-  let formattedQuery = removeReservedParams(req.query, reservedParams);
-  formattedQuery = addDollarSignToOperators(formattedQuery);
-
-  // projection
-  const selectedFields = req.query.select
-    ? req.query.select.split(",").join(" ")
-    : "";
-
-  // sorting
-  const sortBy = req.query.sortBy || "_id";
-
-  // pagination
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 25;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  const total = await Bootcamp.countDocuments();
-
-  const bootcamps = await Bootcamp.find(formattedQuery)
-    .select(selectedFields)
-    .sort(sortBy)
-    .skip(startIndex)
-    .limit(limit)
-    .populate("courses");
-
-  // pagination: next / prev
-  const pagination: Pagination = {};
-
-  if (startIndex > 0) {
-    pagination.prev = {
-      page: page - 1,
-      limit,
-    };
-  }
-
-  if (endIndex < total) {
-    pagination.next = {
-      page: page + 1,
-      limit,
-    };
-  }
-
-  res.status(200).json({
-    success: true,
-    count: bootcamps.length,
-    pagination,
-    data: bootcamps,
-  });
+  res.status(200).json(res.advancedResults);
 });
 
 // @desc      Get a single bootcamp
