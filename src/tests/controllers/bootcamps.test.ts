@@ -1,8 +1,10 @@
+import fs from "fs";
 import mocha from "mocha";
 import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
 import Bootcamp from "../../models/Bootcamp";
+import path from "path";
 
 // @desc      Get all bootcamps
 describe("GET /api/v1/bootcamps", () => {
@@ -296,19 +298,14 @@ describe("GET /api/v1/bootcamps/radius/:zipcode/:distance", () => {
 //     const bootcampId = "5d713995b721c3bb38c1f5d0";
 
 //     it("should respond with a (200: ok) status code", async () => {
+//       const testImage = `${__dirname}/dev.jpg`;
+//       const buffer = await fs.promises.readFile(path.join(testImage));
+
 //       const response = await request(app)
 //         .put(`/api/v1/bootcamps/${bootcampId}/photo`)
-//         .attach("bootcamp-5d713a66ec8f2b88b8f830b8", "./dev.jpg");
+//         .attach("bootcamp-5d713a66ec8f2b88b8f830b8", testImage);
+
 //       expect(response.statusCode).to.equal(200);
 //     });
-
-// it("should respond with json", async () => {
-//   const response = await request(app)
-//     .put(`/api/v1/bootcamps/${bootcampId}`)
-//     .send({ housing: true });
-
-//   expect(response.headers["content-type"]).to.include("json");
-//   expect(response.body.success).to.equal(true);
-// });
 //   });
 // });
