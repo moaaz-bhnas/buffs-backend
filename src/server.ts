@@ -27,9 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // body parser
 
 // logging
-// if (process.env.NODE_ENV) {
-//   app.use(morgan("dev")); // DEV logging middleware
-// }
+if (process.env.NODE_ENV) {
+  app.use(morgan("dev")); // DEV logging middleware
+}
 
 // set static folder
 app.use(express.static(path.join(__dirname, "public")));

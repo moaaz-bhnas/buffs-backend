@@ -3,7 +3,7 @@ import { Model } from "mongoose";
 
 type Query = {
   select: string;
-  sortBy: string;
+  sort: string;
   page: string;
   limit: string;
 };
@@ -49,7 +49,7 @@ export default function (
     next: NextFunction
   ) {
     // Fields to exclude
-    const reservedParams = ["select", "sortBy", "page", "limit"];
+    const reservedParams = ["select", "sort", "page", "limit"];
 
     // remove reserved words from query
     let formattedQuery = removeReservedParams(req.query, reservedParams);
@@ -63,12 +63,13 @@ export default function (
     // projection
     if (req.query.select) {
       const fields = req.query.select.split(",").join(" ");
-      query = query.select(fields);
+      query = query.select(fields); // e.g. .select(name, description)
     }
 
     // sorting
-    if (req.query.sortBy) {
-      query = query.sort(req.query.sortBy);
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      query = query.sort(sortBy); // e.g. .sort(-name)
     }
 
     // pagination
