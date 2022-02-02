@@ -3,6 +3,7 @@ import "colorts/lib/string";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./db";
+import auth from "./routes/auth";
 import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
@@ -35,6 +36,7 @@ if (process.env.NODE_ENV) {
 app.use(express.static(path.join(__dirname, "public")));
 
 // mount routers
+app.use("/api/v1/auth", auth);
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 
