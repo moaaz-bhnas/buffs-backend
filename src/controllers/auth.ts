@@ -14,7 +14,10 @@ export const register = asyncHandler(async function (
 
   const user = await UserModel.create({ name, email, password, role });
 
+  const token = user.getSignedJwtToken();
+
   res.status(201).json({
     success: true,
+    token,
   });
 });

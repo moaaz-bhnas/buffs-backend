@@ -1,5 +1,6 @@
-import { model, Schema } from "mongoose";
+import { Model, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 interface IUser {
   name: string;
@@ -11,7 +12,12 @@ interface IUser {
   createdAt?: Date;
 }
 
-const UserSchema = new Schema<IUser>({
+// To understand this: https://stackoverflow.com/a/69781853/7982963
+interface InstanceMethods {
+  getSignedJwtToken(): string;
+}
+
+const UserSchema = new Schema<IUser, Model<{}, {}, InstanceMethods>>({
   name: {
     type: String,
     required: [true, "Please add a name"],
@@ -50,6 +56,16 @@ UserSchema.pre("save", async function encryptPassword() {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const UserModel = model<IUser>("User", UserSchema);
+UserSchema.methods.getSignedJwtToken = function () {
+  // "this" here refers to the instance (document)
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET ?? "", {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
+
+const UserModel = model<IUser, Model<{}, {}, InstanceMethods>>(
+  "User",
+  UserSchema
+);
 
 export default UserModel;

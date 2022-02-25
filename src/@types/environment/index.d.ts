@@ -8,6 +8,8 @@ declare global {
       GEOCODER_API_KEY: string;
       FILE_UPLOAD_PATH: string;
       MAX_FILE_UPLOAD: number; // in bytes 1mb = 1000000byte
+      JWT_SECRET: string;
+      JWT_EXPIRE: string;
     }
   }
 }

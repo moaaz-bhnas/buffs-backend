@@ -64,9 +64,9 @@ Example:
 Course.static()
 
 Method:
-- called on a query.
+- called on an instance.
 Example:
-const course = Course.findById()
+const course = await Course.findById()
 course.method()
 */
 
