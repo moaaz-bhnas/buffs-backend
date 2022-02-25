@@ -15,7 +15,7 @@ interface IUser {
 // To understand this: https://stackoverflow.com/a/69781853/7982963
 interface InstanceMethods {
   getSignedJwtToken(): string;
-  matchPassword(password: string): boolean;
+  matchPassword(password: string): Promise<boolean>;
 }
 
 interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
@@ -66,7 +66,9 @@ UserSchema.methods.getSignedJwtToken = function (): string {
   });
 };
 
-UserSchema.methods.matchPassword = async function (enteredPassword: string) {
+UserSchema.methods.matchPassword = async function (
+  enteredPassword: string
+): Promise<boolean> {
   const match = await bcrypt.compare(enteredPassword, this.password);
   return match;
 };
