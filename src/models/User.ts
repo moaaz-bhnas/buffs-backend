@@ -15,9 +15,12 @@ interface IUser {
 // To understand this: https://stackoverflow.com/a/69781853/7982963
 interface InstanceMethods {
   getSignedJwtToken(): string;
+  matchPassword(password: string): boolean;
 }
 
-const UserSchema = new Schema<IUser, Model<{}, {}, InstanceMethods>>({
+interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
+
+const UserSchema = new Schema<IUser, IUserModel>({
   name: {
     type: String,
     required: [true, "Please add a name"],
@@ -56,16 +59,18 @@ UserSchema.pre("save", async function encryptPassword() {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema.methods.getSignedJwtToken = function () {
+UserSchema.methods.getSignedJwtToken = function (): string {
   // "this" here refers to the instance (document)
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET ?? "", {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
-const UserModel = model<IUser, Model<{}, {}, InstanceMethods>>(
-  "User",
-  UserSchema
-);
+UserSchema.methods.matchPassword = async function (enteredPassword: string) {
+  const match = await bcrypt.compare(enteredPassword, this.password);
+  return match;
+};
+
+const UserModel = model<IUser, IUserModel>("User", UserSchema);
 
 export default UserModel;

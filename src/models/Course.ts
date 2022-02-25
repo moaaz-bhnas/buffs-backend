@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import { Model, model, ObjectId, Schema } from "mongoose";
 import Bootcamp from "./Bootcamp";
 

@@ -62,3 +62,64 @@ describe("POST /api/v1/auth/register", () => {
     });
   });
 });
+
+// @desc      Login user
+describe("POST /api/v1/auth/login", () => {
+  const user = {
+    name: "yurio",
+    email: "yurio@yahoo.com",
+    password: "yurio228",
+    role: "user",
+  };
+
+  before(async function () {
+    await UserModel.create(user);
+  });
+
+  after(async function () {
+    await UserModel.deleteOne({ name: user.name });
+  });
+
+  describe("Email is valid", () => {
+    const validCredentials = { email: user.email, password: user.password };
+
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/login")
+        .send(validCredentials);
+      expect(response.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/login")
+        .send(validCredentials);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
+    });
+  });
+
+  describe("Email is not valid", () => {
+    const invalidCredentials = {
+      email: "yurio@yahoo",
+      password: user.password,
+    };
+
+    it("should respond with a (401: unauthorized) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/login")
+        .send(invalidCredentials);
+      expect(response.statusCode).to.equal(401);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/login")
+        .send(invalidCredentials);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
+    });
+  });
+});
