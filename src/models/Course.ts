@@ -97,7 +97,7 @@ schema.statics.getAverageCost = async function (bootcampId: ObjectId | string) {
 };
 
 // call .getAverageCost() after save
-schema.post("save", function (next) {
+schema.post("save", function (document, next) {
   CourseModel.getAverageCost(this.bootcamp);
   next();
 });
