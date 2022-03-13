@@ -228,10 +228,41 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
       acceptGi: true,
     };
 
+    const attachedCourses = [
+      {
+        _id: "5d725a4a7b292f5f8ceff789",
+        title: "Front End Web Development",
+        description:
+          "This course will provide you with all of the essentials to become a successful frontend web developer. You will learn to master HTML, CSS and front end JavaScript, along with tools like Git, VSCode and front end frameworks like Vue",
+        weeks: 8,
+        tuition: 8000,
+        minimumSkill: "beginner",
+        scholarhipsAvailable: true,
+        bootcamp: "5d713995b721c3bb38c1f5d0",
+        user: "5d7a514b5d2c12c7449be045",
+      },
+      {
+        _id: "5d725c84c4ded7bcb480eaa0",
+        title: "Full Stack Web Development",
+        description:
+          "In this course you will learn full stack web development, first learning all about the frontend with HTML/CSS/JS/Vue and then the backend with Node.js/Express/MongoDB",
+        weeks: 12,
+        tuition: 10000,
+        minimumSkill: "intermediate",
+        scholarhipsAvailable: true,
+        bootcamp: "5d713995b721c3bb38c1f5d0",
+        user: "5d7a514b5d2c12c7449be045",
+      },
+    ];
+
     afterEach(async function () {
-      const response = await request(app)
-        .post("/api/v1/bootcamps")
-        .send(bootcamp);
+      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      await request(app)
+        .post(`/api/v1/bootcamps/${bootcamp._id}/courses`)
+        .send(attachedCourses[0]);
+      await request(app)
+        .post(`/api/v1/bootcamps/${bootcamp._id}/courses`)
+        .send(attachedCourses[1]);
     });
 
     it("should respond with a (200: ok) status code", async () => {
