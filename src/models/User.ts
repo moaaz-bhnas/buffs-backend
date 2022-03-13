@@ -2,7 +2,7 @@ import { Model, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-interface IUser {
+export interface IUser {
   name: string;
   email: string;
   password: string;
@@ -13,12 +13,12 @@ interface IUser {
 }
 
 // To understand this: https://stackoverflow.com/a/69781853/7982963
-interface InstanceMethods {
+export interface InstanceMethods {
   getSignedJwtToken(): string;
   matchPassword(password: string): Promise<boolean>;
 }
 
-interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
+export interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
 
 const UserSchema = new Schema<IUser, IUserModel>({
   name: {
@@ -58,6 +58,11 @@ UserSchema.pre("save", async function encryptPassword() {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+/* 
+فايدة التوكن انها بتتبعت مع اي ريكويست بعد تسجيل الدخول
+for authentication
+*/
 
 UserSchema.methods.getSignedJwtToken = function (): string {
   // "this" here refers to the instance (document)

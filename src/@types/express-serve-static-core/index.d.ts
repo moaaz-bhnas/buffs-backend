@@ -1,5 +1,8 @@
 declare global {
   namespace Express {
+    interface Request {
+      user: object | null;
+    }
     interface Response {
       advancedResults: {
         success: boolean;

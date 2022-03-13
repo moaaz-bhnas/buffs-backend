@@ -3,6 +3,7 @@ import "colorts/lib/string";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./db";
+import cookieParser from "cookie-parser";
 import auth from "./routes/auth";
 import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
@@ -25,7 +26,12 @@ const app: Application = express();
 
 // `.use()` for middlewares
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // body parser
+
+// body parser
+app.use(express.json());
+
+// Cookie parser
+app.use(cookieParser());
 
 // logging
 if (process.env.NODE_ENV) {
