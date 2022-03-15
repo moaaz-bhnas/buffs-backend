@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Document, Model } from "mongoose";
+import { Document } from "mongoose";
 import asyncHandler from "../middlewares/asyncHandler";
 import UserModel, { InstanceMethods, IUser } from "../models/User";
 import ErrorResponse from "../utils/errorResponse";
