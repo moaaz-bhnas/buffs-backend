@@ -95,9 +95,9 @@ function sendTokenResponse(
   });
 }
 
-// @desc      Login user
-// @route     Post /api/v1/auth/login
-// @access    Public: any user can access
+// @desc      Get logged-in user
+// @route     Get /api/v1/auth/me
+// @access    Private
 export const getMe = asyncHandler(async function (
   req: Request,
   res: Response,
