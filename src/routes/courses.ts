@@ -8,7 +8,7 @@ import { Router } from "express";
 import { getCourses } from "../controllers/courses";
 import advancedResults from "../middlewares/advancedResults";
 import CourseModel from "../models/Course";
-import { protect } from "../middlewares/auth";
+import { authorize, protect } from "../middlewares/auth";
 
 const router = Router({ mergeParams: true });
 
@@ -21,12 +21,12 @@ router
     }),
     getCourses
   )
-  .post(protect, createCourse);
+  .post(protect, authorize("publisher", "admin"), createCourse);
 
 router
   .route("/:id")
   .get(getCourse)
-  .put(protect, updateCourse)
-  .delete(protect, deleteCourse);
+  .put(protect, authorize("publisher", "admin"), updateCourse)
+  .delete(protect, authorize("publisher", "admin"), deleteCourse);
 
 export default router;
