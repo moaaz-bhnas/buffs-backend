@@ -86,7 +86,7 @@ function sendTokenResponse(
   };
 
   if (process.env.NODE_ENV === "production") {
-    options.secure = false;
+    options.secure = true;
   }
 
   res.status(statusCode).cookie("token", token, options).json({
@@ -94,3 +94,19 @@ function sendTokenResponse(
     token,
   });
 }
+
+// @desc      Login user
+// @route     Post /api/v1/auth/login
+// @access    Public: any user can access
+export const getMe = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("user: ", req.user);
+
+  res.status(200).json({
+    success: true,
+    data: req.user,
+  });
+});

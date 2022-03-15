@@ -4,7 +4,12 @@ import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "./asyncHandler";
 import UserModel from "../models/User";
 
+interface JwtPayload {
+  id: string;
+}
+
 // Protect routes
+// Makes sure it's a logged-in user
 export const protect = asyncHandler(async function (
   req: Request,
   res: Response,
@@ -14,7 +19,7 @@ export const protect = asyncHandler(async function (
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith("Bearer") // formatted correctly check
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
@@ -26,22 +31,25 @@ export const protect = asyncHandler(async function (
 
   // Make sure token exists
   if (!token) {
-    return next(
-      new ErrorResponse({
-        message: "Not authorized to access this route",
-        statusCode: 401,
-      })
-    );
+    const error = new ErrorResponse({
+      message: "Not authorized to access this route",
+      statusCode: 401,
+    });
+    return next(error);
   }
 
-  // try {
-  //   // verify token
-  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    // verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET ?? "");
 
-  //   console.log("decoded: ", decoded);
+    console.log("decoded: ", decoded);
 
-  //   req.user = await UserModel.findById(decoded);
-  // } catch (error) {
-  //   console.error(error);
-  // }
+    // logged-in user
+    const { id } = decoded as JwtPayload;
+    req.user = await UserModel.findById(id);
+
+    next();
+  } catch (error) {
+    console.error(error);
+  }
 });
