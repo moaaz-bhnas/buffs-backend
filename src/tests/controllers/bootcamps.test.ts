@@ -67,6 +67,17 @@ describe("GET /api/v1/bootcamps/:id", () => {
 
 // @desc      Create a bootcamp
 describe("POST /api/v1/bootcamps", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   const bootcamp = {
     _id: "5d713995b721c3bb38c1f5d0",
     user: "5d7a514b5d2c12c7449be045",
@@ -84,17 +95,18 @@ describe("POST /api/v1/bootcamps", () => {
     acceptGi: true,
   };
 
-  // runs after each test in this block
+  // runs before each test in this block
   beforeEach(async function () {
-    await Bootcamp.deleteOne({
-      _id: bootcamp._id,
-    });
+    await request(app)
+      .delete(`/api/v1/bootcamps/${bootcamp._id}`)
+      .set("Authorization", `Bearer ${token}`);
   });
 
   describe("document is valid", () => {
     it("should respond with a (201: created) status code", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcamp);
       expect(response.statusCode).to.equal(201);
     });
@@ -102,6 +114,7 @@ describe("POST /api/v1/bootcamps", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcamp);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -128,6 +141,7 @@ describe("POST /api/v1/bootcamps", () => {
     it("should respond with a (400: bad request) status code", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcampWithoutName);
 
       expect(response.statusCode).to.equal(400);
@@ -136,6 +150,7 @@ describe("POST /api/v1/bootcamps", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcampWithoutName);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -145,18 +160,26 @@ describe("POST /api/v1/bootcamps", () => {
 
   describe("unique field is duplicate (name)", () => {
     it("should respond with a (400: bad request) status code", async () => {
-      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      await request(app)
+        .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
+        .send(bootcamp);
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcamp);
 
       expect(response.statusCode).to.equal(400);
     });
 
     it("should respond with json", async () => {
-      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      await request(app)
+        .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
+        .send(bootcamp);
       const response = await request(app)
         .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
         .send(bootcamp);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -167,12 +190,24 @@ describe("POST /api/v1/bootcamps", () => {
 
 // @desc      Update a bootcamp
 describe("PUT /api/v1/bootcamps/:id", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   describe("document exists", () => {
     const bootcampId = "5d713995b721c3bb38c1f5d0";
 
     it("should respond with a (200: ok) status code", async () => {
       const response = await request(app)
         .put(`/api/v1/bootcamps/${bootcampId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ housing: false });
       expect(response.statusCode).to.equal(200);
     });
@@ -180,6 +215,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .put(`/api/v1/bootcamps/${bootcampId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ housing: true });
 
       expect(response.headers["content-type"]).to.include("json");
@@ -193,6 +229,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
     it("should respond with a (404: not found) status code", async () => {
       const response = await request(app)
         .put(`/api/v1/bootcamps/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ jobAssistance: false });
       expect(response.statusCode).to.equal(404);
     });
@@ -200,6 +237,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .put(`/api/v1/bootcamps/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ jobAssistance: false });
 
       expect(response.headers["content-type"]).to.include("json");
@@ -210,6 +248,17 @@ describe("PUT /api/v1/bootcamps/:id", () => {
 
 // @desc      Delete a bootcamp
 describe("DELETE /api/v1/bootcamps/:id", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   describe("document exists", () => {
     const bootcamp = {
       _id: "5d713995b721c3bb38c1f5d0",
@@ -256,26 +305,34 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
     ];
 
     afterEach(async function () {
-      await request(app).post("/api/v1/bootcamps").send(bootcamp);
+      // Re-insert bootcamp
+      await request(app)
+        .post("/api/v1/bootcamps")
+        .set("Authorization", `Bearer ${token}`)
+        .send(bootcamp);
+
+      // Re-insert attached courses
       await request(app)
         .post(`/api/v1/bootcamps/${bootcamp._id}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(attachedCourses[0]);
       await request(app)
         .post(`/api/v1/bootcamps/${bootcamp._id}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(attachedCourses[1]);
     });
 
     it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).delete(
-        `/api/v1/bootcamps/${bootcamp._id}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/bootcamps/${bootcamp._id}`)
+        .set("Authorization", `Bearer ${token}`);
       expect(response.statusCode).to.equal(200);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).delete(
-        `/api/v1/bootcamps/${bootcamp._id}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/bootcamps/${bootcamp._id}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
@@ -286,17 +343,17 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
     const nonExistentId = "5d713995b721c3bb38c1fddd";
 
     it("should respond with a (404: not found) status code", async () => {
-      const response = await request(app).delete(
-        `/api/v1/bootcamps/${nonExistentId}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/bootcamps/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.statusCode).to.equal(404);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).delete(
-        `/api/v1/bootcamps/${nonExistentId}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/bootcamps/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);

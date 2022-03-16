@@ -42,8 +42,6 @@ export const protect = asyncHandler(async function (
     // verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET ?? "");
 
-    console.log("decoded: ", decoded);
-
     // logged-in user
     const { id } = decoded as JwtPayload;
     req.user = await UserModel.findById(id);
