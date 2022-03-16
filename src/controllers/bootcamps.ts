@@ -47,7 +47,20 @@ export const createBootcamp = asyncHandler(async function (
   res: Response,
   next: NextFunction
 ) {
+  // If user is not admin, and already published a bootcamp, then abort
+  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+  if (req.user.role !== "admin" && publishedBootcamp) {
+    const error = new ErrorResponse({
+      statusCode: 400,
+      message: `User with ID: ${req.user.id} has already published a bootcamp`,
+    });
+    return next(error);
+  }
+
+  // Add user to body
+  req.body.user = req.user.id;
   const bootcamp = await Bootcamp.create(req.body);
+
   res.status(201).json({ success: true, data: bootcamp });
 });
 

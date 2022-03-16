@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";
 
@@ -31,6 +31,7 @@ interface Bootcamp {
   jobGuarantee?: boolean;
   acceptGi?: boolean;
   createdAt?: Date;
+  user: ObjectId | string;
 }
 
 const schema = new Schema<Bootcamp>(
@@ -128,6 +129,11 @@ const schema = new Schema<Bootcamp>(
     createdAt: {
       type: Date,
       default: Date.now,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {
