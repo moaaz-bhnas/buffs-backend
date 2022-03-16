@@ -83,6 +83,17 @@ describe("GET /api/v1/courses/:id", () => {
 
 // @desc      Create a course in a bootcamp
 describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   const bootcampId = "5d713995b721c3bb38c1f5d0";
 
   const course = {
@@ -100,15 +111,16 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
 
   // runs before each test in this block
   beforeEach(async function () {
-    await Course.deleteOne({
-      _id: course._id,
-    });
+    await request(app)
+      .delete(`/api/v1/courses/${course._id}`)
+      .set("Authorization", `Bearer ${token}`);
   });
 
   describe("course document is valid", () => {
     it("should respond with a (201: created) status code", async () => {
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
       expect(response.statusCode).to.equal(201);
     });
@@ -116,6 +128,7 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -130,6 +143,7 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     it("should respond with a (400: bad request) status code", async () => {
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(invalidCourse);
 
       expect(response.statusCode).to.equal(400);
@@ -138,6 +152,7 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(invalidCourse);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -149,9 +164,11 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     it("should respond with a (400: bad request) status code", async () => {
       await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
 
       expect(response.statusCode).to.equal(400);
@@ -160,9 +177,11 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
     it("should respond with json", async () => {
       await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
       const response = await request(app)
         .post(`/api/v1/bootcamps/${bootcampId}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
 
       expect(response.headers["content-type"]).to.include("json");
@@ -173,12 +192,24 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
 
 // @desc      Update a course
 describe("PUT /api/v1/courses/:id", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   describe("course exists", () => {
     const courseId = "5d725c84c4ded7bcb480eaa0";
 
     it("should respond with a (200: ok) status code", async () => {
       const response = await request(app)
         .put(`/api/v1/courses/${courseId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ scholarshipAvailable: false });
       expect(response.statusCode).to.equal(200);
     });
@@ -186,6 +217,7 @@ describe("PUT /api/v1/courses/:id", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .put(`/api/v1/courses/${courseId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ scholarshipAvailable: true });
 
       expect(response.headers["content-type"]).to.include("json");
@@ -199,6 +231,7 @@ describe("PUT /api/v1/courses/:id", () => {
     it("should respond with a (404: not found) status code", async () => {
       const response = await request(app)
         .put(`/api/v1/courses/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ scholarshipAvailable: false });
       expect(response.statusCode).to.equal(404);
     });
@@ -206,6 +239,7 @@ describe("PUT /api/v1/courses/:id", () => {
     it("should respond with json", async () => {
       const response = await request(app)
         .put(`/api/v1/courses/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`)
         .send({ scholarshipAvailable: false });
 
       expect(response.headers["content-type"]).to.include("json");
@@ -216,6 +250,17 @@ describe("PUT /api/v1/courses/:id", () => {
 
 // @desc      Delete a course
 describe("DELETE /api/v1/courses/:id", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
   describe("course exists", () => {
     const course = {
       _id: "5d725a4a7b292f5f8ceff789",
@@ -233,20 +278,21 @@ describe("DELETE /api/v1/courses/:id", () => {
     afterEach(async function () {
       await request(app)
         .post(`/api/v1/bootcamps/${course.bootcamp}/courses`)
+        .set("Authorization", `Bearer ${token}`)
         .send(course);
     });
 
     it("should respond with a (200: ok) status code", async () => {
-      const response = await request(app).delete(
-        `/api/v1/courses/${course._id}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/courses/${course._id}`)
+        .set("Authorization", `Bearer ${token}`);
       expect(response.statusCode).to.equal(200);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).delete(
-        `/api/v1/courses/${course._id}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/courses/${course._id}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
@@ -257,17 +303,17 @@ describe("DELETE /api/v1/courses/:id", () => {
     const nonExistentId = "5d725a4a7b292f5f8cef7777";
 
     it("should respond with a (404: not found) status code", async () => {
-      const response = await request(app).delete(
-        `/api/v1/courses/${nonExistentId}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/courses/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.statusCode).to.equal(404);
     });
 
     it("should respond with json", async () => {
-      const response = await request(app).delete(
-        `/api/v1/courses/${nonExistentId}`
-      );
+      const response = await request(app)
+        .delete(`/api/v1/courses/${nonExistentId}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
