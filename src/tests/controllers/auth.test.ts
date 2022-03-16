@@ -123,3 +123,35 @@ describe("POST /api/v1/auth/login", () => {
     });
   });
 });
+
+// @desc      Get logged-in user via token
+describe("GET /api/v1/auth/me", () => {
+  let token = "";
+
+  // Runs before all tests
+  before(async function getToken() {
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+
+    token = response.body.token;
+  });
+
+  describe("Token is valid", () => {
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app)
+        .get("/api/v1/auth/me")
+        .set("Authorization", `Bearer ${token}`);
+      expect(response.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .get("/api/v1/auth/me")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
+    });
+  });
+});
