@@ -178,6 +178,14 @@ export const uploadBootcampPhoto = asyncHandler(async function (
     return next(error);
   }
 
+  if (bootcamp?.user.toString() !== req.user.id && req.user.role !== "admin") {
+    const error = new ErrorResponse({
+      message: `User: ${req.user.id} is not authorized to delete this bootcamp`,
+      statusCode: 401,
+    });
+    return next(error);
+  }
+
   const { file } = req;
   console.log("file: ", file);
   if (!file) {
