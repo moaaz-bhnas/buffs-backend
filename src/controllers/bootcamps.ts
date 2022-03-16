@@ -84,6 +84,14 @@ export const updateBootcamp = asyncHandler(async function (
     next(error);
   }
 
+  if (bootcamp?.user.toString() !== req.user.id && req.user.role !== "admin") {
+    const error = new ErrorResponse({
+      message: `User: ${req.user.id} is not authorized to update this bootcamp`,
+      statusCode: 401,
+    });
+    return next(error);
+  }
+
   const updatedBootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true,
@@ -108,6 +116,14 @@ export const deleteBootcamp = asyncHandler(async function (
     const error = new ErrorResponse({
       message: `Bootcamp not found with id: ${id}`,
       statusCode: 404,
+    });
+    return next(error);
+  }
+
+  if (bootcamp?.user.toString() !== req.user.id && req.user.role !== "admin") {
+    const error = new ErrorResponse({
+      message: `User: ${req.user.id} is not authorized to delete this bootcamp`,
+      statusCode: 401,
     });
     return next(error);
   }
