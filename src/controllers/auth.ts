@@ -5,7 +5,7 @@ import UserModel, { InstanceMethods, IUser } from "../models/User";
 import ErrorResponse from "../utils/errorResponse";
 
 // @desc      Register user
-// @route     Post /api/v1/auth/register
+// @route     POST /api/v1/auth/register
 // @access    Public: any user can access
 export const register = asyncHandler(async function (
   req: Request,
@@ -25,7 +25,7 @@ export const register = asyncHandler(async function (
 });
 
 // @desc      Login user
-// @route     Post /api/v1/auth/login
+// @route     POST /api/v1/auth/login
 // @access    Public: any user can access
 export const login = asyncHandler(async function (
   req: Request,
@@ -68,6 +68,52 @@ export const login = asyncHandler(async function (
   sendTokenResponse(user, 200, res);
 });
 
+// @desc      Get logged-in user
+// @route     GET /api/v1/auth/me
+// @access    Private
+export const getMe = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("user: ", req.user);
+
+  res.status(200).json({
+    success: true,
+    data: req.user,
+  });
+});
+
+// @desc      Forgot password
+// @route     POST /api/v1/auth/forgotpassword
+// @access    Public
+export const forgotPassword = asyncHandler(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const user = await UserModel.findOne({ email: req.body.email });
+
+  if (!user) {
+    const error = new ErrorResponse({
+      message: "There is no user with that email",
+      statusCode: 404,
+    });
+    return next(error);
+  }
+
+  // Get reset token
+  const resetToken = user.getResetPasswordToken();
+  console.log("resetToken: ", resetToken);
+
+  user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
 // Using a cookie is safer than storing the token in the local storage
 // Get token from model, create cookie and send response
 function sendTokenResponse(
@@ -94,19 +140,3 @@ function sendTokenResponse(
     token,
   });
 }
-
-// @desc      Get logged-in user
-// @route     Get /api/v1/auth/me
-// @access    Private
-export const getMe = asyncHandler(async function (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  console.log("user: ", req.user);
-
-  res.status(200).json({
-    success: true,
-    data: req.user,
-  });
-});

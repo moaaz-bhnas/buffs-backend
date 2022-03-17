@@ -1,4 +1,5 @@
 import { Model, model, Schema } from "mongoose";
+import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -8,7 +9,7 @@ export interface IUser {
   password: string;
   role?: string;
   resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
+  resetPasswordExpire?: number;
   createdAt?: Date;
 }
 
@@ -16,6 +17,7 @@ export interface IUser {
 export interface InstanceMethods {
   getSignedJwtToken(): string;
   matchPassword(password: string): Promise<boolean>;
+  getResetPasswordToken(): string;
 }
 
 export interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
@@ -54,7 +56,11 @@ const UserSchema = new Schema<IUser, IUserModel>({
 });
 
 // encrypt password using bcrypt
-UserSchema.pre("save", async function encryptPassword() {
+UserSchema.pre("save", async function encryptPassword(next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -76,6 +82,27 @@ UserSchema.methods.matchPassword = async function (
 ): Promise<boolean> {
   const match = await bcrypt.compare(enteredPassword, this.password);
   return match;
+};
+
+/** A great article to read: https://www.freecodecamp.org/news/do-you-want-a-better-understanding-of-buffer-in-node-js-check-this-out-2e29de2968e8/
+  - Buffer, data streams, binary data
+ */
+
+// Generate and hash password token
+UserSchema.methods.getResetPasswordToken = function () {
+  // Generate token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hash token and set to resetPasswordToken
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set expire
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 60 * 1000;
+
+  return resetToken;
 };
 
 const UserModel = model<IUser, IUserModel>("User", UserSchema);
