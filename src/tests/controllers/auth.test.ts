@@ -101,7 +101,7 @@ describe("POST /api/v1/auth/login", () => {
   });
 
   describe("Email is not valid", () => {
-    const invalidCredentials = {
+    const invalidEmail = {
       email: "yurio@yahoo",
       password: user.password,
     };
@@ -109,14 +109,14 @@ describe("POST /api/v1/auth/login", () => {
     it("should respond with a (401: unauthorized) status code", async () => {
       const response = await request(app)
         .post("/api/v1/auth/login")
-        .send(invalidCredentials);
+        .send(invalidEmail);
       expect(response.statusCode).to.equal(401);
     });
 
     it("should respond with json", async () => {
       const response = await request(app)
         .post("/api/v1/auth/login")
-        .send(invalidCredentials);
+        .send(invalidEmail);
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(false);
@@ -126,15 +126,25 @@ describe("POST /api/v1/auth/login", () => {
 
 // @desc      Get logged-in user via token
 describe("GET /api/v1/auth/me", () => {
+  const user = {
+    name: "harry",
+    email: "harry@yahoo.com",
+    password: "harry228",
+    role: "publisher",
+  };
   let token = "";
 
   // Runs before all tests
   before(async function getToken() {
     const response = await request(app)
-      .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .post("/api/v1/auth/register")
+      .send(user);
 
     token = response.body.token;
+  });
+
+  after(async function () {
+    await UserModel.deleteOne({ name: user.name });
   });
 
   describe("Token is valid", () => {
@@ -152,6 +162,64 @@ describe("GET /api/v1/auth/me", () => {
 
       expect(response.headers["content-type"]).to.include("json");
       expect(response.body.success).to.equal(true);
+    });
+  });
+});
+
+// @desc      Forgot password
+describe("POST /api/v1/auth/forgotpassword", () => {
+  const user = {
+    name: "yurio",
+    email: "yurio@yahoo.com",
+    password: "yurio228",
+    role: "user",
+  };
+
+  before(async function () {
+    await UserModel.create(user);
+  });
+
+  after(async function () {
+    await UserModel.deleteOne({ name: user.name });
+  });
+
+  describe("Email exists", () => {
+    const validEmail = { email: user.email };
+
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(validEmail);
+      expect(response.statusCode).to.equal(200);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(validEmail);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(true);
+    });
+  });
+
+  describe("No user with that email", () => {
+    const invalidEmail = { email: "yuuri@yahoo.com" };
+
+    it("should respond with a (404: NOT FOUND) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(invalidEmail);
+      expect(response.statusCode).to.equal(404);
+    });
+
+    it("should respond with json", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(invalidEmail);
+
+      expect(response.headers["content-type"]).to.include("json");
+      expect(response.body.success).to.equal(false);
     });
   });
 });
