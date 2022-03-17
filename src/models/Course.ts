@@ -11,6 +11,7 @@ interface ICourse {
   createdAt?: Date;
   bootcamp: ObjectId | string;
   model: Function;
+  user: ObjectId | string;
 }
 
 interface ICourseModel extends Model<ICourse> {
@@ -52,6 +53,11 @@ const schema = new Schema<ICourse, ICourseModel>({
   bootcamp: {
     type: Schema.Types.ObjectId,
     ref: "Bootcamp",
+    required: true,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });
