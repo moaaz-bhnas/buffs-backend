@@ -22,15 +22,19 @@ export const protect = asyncHandler(async function (
     req.headers.authorization.startsWith("Bearer") // formatted correctly check
   ) {
     token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.token) {
+    token = req.cookies.token;
+    /*
+    Now even if the token isn't sent with the request, it'll be the cookie
+    and request is still gonna work
+    */
   }
 
-  // later ..
-  // else if (req.cookies.token) {
-  //   token = req.cookies.token;
-  // }
+  console.log("token: ", typeof token);
 
   // Make sure token exists
-  if (!token) {
+  if (!token || token === "null" || token === "none") {
+    console.log("ErrorResponse");
     const error = new ErrorResponse({
       message: "Not authorized to access this route",
       statusCode: 401,

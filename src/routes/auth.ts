@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { getMe, login, register, forgotPassword } from "../controllers/auth";
+import {
+  getMe,
+  login,
+  register,
+  forgotPassword,
+  logout,
+} from "../controllers/auth";
 import { protect } from "../middlewares/auth";
 
 const router = Router();
@@ -9,6 +15,9 @@ router.route("/register").post(register);
 
 // Login
 router.route("/login").post(login);
+
+// Login
+router.route("/logout").get(logout);
 
 // Get me
 router.route("/me").get(protect, getMe);

@@ -68,6 +68,25 @@ export const login = asyncHandler(async function (
   sendTokenResponse(user, 200, res);
 });
 
+// @desc      Log user out
+// @route     GET /api/v1/auth/logout
+// @access    Public
+export const logout = asyncHandler(function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true, // because we want the cookie to only be accessed through the client-side
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
+});
+
 // @desc      Get logged-in user
 // @route     GET /api/v1/auth/me
 // @access    Private
@@ -128,7 +147,7 @@ function sendTokenResponse(
 
   const options: any = {
     expires: new Date(Date.now() + JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
-    httpOnly: true, // because we want the cookie to pnly be accessed through the client-side
+    httpOnly: true, // because we want the cookie to only be accessed through the client-side
   };
 
   if (process.env.NODE_ENV === "production") {

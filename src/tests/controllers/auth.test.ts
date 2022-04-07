@@ -124,6 +124,21 @@ describe("POST /api/v1/auth/login", () => {
   });
 });
 
+// @desc      Logout user
+describe("GET /api/v1/auth/logout", () => {
+  it("should respond with a (200: ok) status code", async () => {
+    const response = await request(app).get("/api/v1/auth/logout");
+    expect(response.statusCode).to.equal(200);
+  });
+
+  it("should respond with json", async () => {
+    const response = await request(app).get("/api/v1/auth/logout");
+
+    expect(response.headers["content-type"]).to.include("json");
+    expect(response.body.success).to.equal(true);
+  });
+});
+
 // @desc      Get logged-in user via token
 describe("GET /api/v1/auth/me", () => {
   const user = {
