@@ -9,6 +9,7 @@ import bootcamps from "./routes/bootcamps";
 import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
 import path from "path";
+import expressMongoSanitize from "express-mongo-sanitize";
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -37,6 +38,9 @@ app.use(cookieParser());
 if (process.env.NODE_ENV) {
   app.use(morgan("dev")); // DEV logging middleware
 }
+
+// sanitize data
+app.use(expressMongoSanitize());
 
 // set static folder
 app.use(express.static(path.join(__dirname, "public")));

@@ -14,7 +14,7 @@ export default function errorHandler(
 
   // mongoose bad ObjectId
   if (error.name === "CastError") {
-    const message = `resource not found with id: ${error.value}`;
+    const message = `resource not found`;
     errorResponse = new ErrorResponse({ message, statusCode: 404 });
   }
 
