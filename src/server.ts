@@ -10,6 +10,11 @@ import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
 import path from "path";
 import expressMongoSanitize from "express-mongo-sanitize";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
+// import xss from "xss-clean";
+import cors from "cors";
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -41,6 +46,26 @@ if (process.env.NODE_ENV) {
 
 // sanitize data
 app.use(expressMongoSanitize());
+
+// add security headers
+app.use(helmet());
+
+// sanitize user input
+// someone creates a bootcamp with the name: "someBootcamp <script></script>"
+// app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins
+  max: 100,
+});
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
 
 // set static folder
 app.use(express.static(path.join(__dirname, "public")));
