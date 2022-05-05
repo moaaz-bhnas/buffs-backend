@@ -6,11 +6,9 @@ import {
   updateBootcamp,
   deleteBootcamp,
   getBootcampsInRadius,
-  uploadBootcampPhoto,
 } from "../controllers/bootcamps";
 import advancedResults from "../middlewares/advancedResults";
 import { authorize, protect } from "../middlewares/auth";
-import multerUpload from "../middlewares/multerUpload";
 import Bootcamp from "../models/Bootcamp";
 import coursesRouter from "./courses";
 
@@ -28,15 +26,6 @@ router
   .delete(protect, authorize("publisher", "admin"), deleteBootcamp);
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
-
-router
-  .route("/:id/photo")
-  .put(
-    protect,
-    authorize("publisher", "admin"),
-    multerUpload,
-    uploadBootcampPhoto
-  );
 
 // re-route
 router.use("/:bootcampId/courses", coursesRouter);

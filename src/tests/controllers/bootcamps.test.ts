@@ -379,21 +379,3 @@ describe("GET /api/v1/bootcamps/radius/:zipcode/:distance", () => {
     expect(response.body.success).to.equal(true);
   });
 });
-
-// @desc      Upload photo for bootcamp
-// describe("PUT /api/v1/bootcamps/:id/photo", () => {
-//   describe("document exists", () => {
-//     const bootcampId = "5d713995b721c3bb38c1f5d0";
-
-//     it("should respond with a (200: ok) status code", async () => {
-//       const testImage = `${__dirname}/dev.jpg`;
-//       const buffer = await fs.promises.readFile(path.join(testImage));
-
-//       const response = await request(app)
-//         .put(`/api/v1/bootcamps/${bootcampId}/photo`)
-//         .attach("bootcamp-5d713a66ec8f2b88b8f830b8", testImage);
-
-//       expect(response.statusCode).to.equal(200);
-//     });
-//   });
-// });
