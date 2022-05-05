@@ -89,7 +89,7 @@ describe("POST /api/v1/bootcamps/:bootcampId/courses", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });
@@ -198,13 +198,13 @@ describe("PUT /api/v1/courses/:id", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });
 
   describe("course exists", () => {
-    const courseId = "5d725c84c4ded7bcb480eaa0";
+    const courseId = "5d725a4a7b292f5f8ceff789";
 
     it("should respond with a (200: ok) status code", async () => {
       const response = await request(app)
@@ -256,7 +256,7 @@ describe("DELETE /api/v1/courses/:id", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });

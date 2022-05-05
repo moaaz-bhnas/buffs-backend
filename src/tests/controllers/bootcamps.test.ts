@@ -73,7 +73,7 @@ describe("POST /api/v1/bootcamps", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });
@@ -196,7 +196,7 @@ describe("PUT /api/v1/bootcamps/:id", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });
@@ -254,7 +254,7 @@ describe("DELETE /api/v1/bootcamps/:id", () => {
   before(async function getToken() {
     const response = await request(app)
       .post("/api/v1/auth/login")
-      .send({ email: "moaaz_bs@yahoo.com", password: "harry228" });
+      .send({ email: "john@gmail.com", password: "123456" });
 
     token = response.body.token;
   });
