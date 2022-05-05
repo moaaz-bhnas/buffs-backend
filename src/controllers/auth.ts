@@ -72,7 +72,7 @@ export const logout = asyncHandler(function (
   next: NextFunction
 ) {
   res.cookie("token", "none", {
-    expires: new Date(Date.now() + 10 * 1000),
+    expires: new Date(Date.now() + 10 * 1000), // 10 sec
     httpOnly: true, // because we want the cookie to only be accessed through the client-side
   });
 
