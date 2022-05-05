@@ -41,7 +41,7 @@ async function importData() {
     await Bootcamp.create(bootcamps);
     await Course.create(courses);
     await User.create(users);
-    console.log("Data imported...".green.inverse);
+    console.log("Data imported...");
     process.exit();
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ async function deleteData() {
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     await User.deleteMany();
-    console.log("Data deleted...".red.inverse);
+    console.log("Data deleted...");
     process.exit();
   } catch (error) {
     console.error(error);
