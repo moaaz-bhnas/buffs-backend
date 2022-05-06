@@ -9,7 +9,8 @@
     "postinstall": "tsc && mv -i -v public dist/",
     "build": "tsc -p .",
     "test": "mocha -r ts-node/register --timeout 100000 src/tests/**/*.ts",
-    "test-single": "mocha -r ts-node/register --timeout 100000"
+    "test-single": "mocha -r ts-node/register --timeout 100000",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
   "author": "moaaz-bhnas",
   "license": "MIT",
