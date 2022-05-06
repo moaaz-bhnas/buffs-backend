@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx nodemon src/server.ts",
     "start": "NODE_ENV=production node dist/server.js",
-    "postinstall": "tsc && mv -i -v public dist/",
+    "postinstall": "tsc && mv -i -v src/public dist/",
     "test": "mocha -r ts-node/register --timeout 100000 src/tests/**/*.ts",
     "test-single": "mocha -r ts-node/register --timeout 100000",
     "deploy": "git add . && git commit -m Heroku && git push heroku main"
