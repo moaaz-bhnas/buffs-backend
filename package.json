@@ -10,7 +10,7 @@
     "build": "tsc -p .",
     "test": "mocha -r ts-node/register --timeout 100000 src/tests/**/*.ts",
     "test-single": "mocha -r ts-node/register --timeout 100000",
-    "deploy": "git add . && git commit -m Heroku && git push heroku master"
+    "deploy": "git add . && git commit -m Heroku && git push heroku main"
   },
   "author": "moaaz-bhnas",
   "license": "MIT",
