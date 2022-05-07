@@ -1,6 +1,6 @@
 # Camper API
 
-Backend API for bootcamps website
+Backend RESTful API For Bootcamp Directory App
 
 ## Usage
 
