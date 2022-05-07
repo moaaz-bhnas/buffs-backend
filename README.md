@@ -41,8 +41,8 @@ To seed the database with users, bootcamps and courses data from the "\_data" fo
 
 ```
 # Destroy all data
-npx nodemon seeder d
+npx nodemon src/seeder d
 
 # Import all data
-npx nodemon seeder i
+npx nodemon src/seeder i
 ```
