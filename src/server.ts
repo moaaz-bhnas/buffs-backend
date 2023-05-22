@@ -1,6 +1,4 @@
 import express, { Application } from "express";
-import dotenv from "dotenv";
-import morgan from "morgan";
 import connectDB from "./db";
 import cookieParser from "cookie-parser";
 import auth from "./routes/auth";
@@ -14,9 +12,6 @@ import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
 import cors from "cors";
-
-// Load env variables
-dotenv.config({ path: "./config/config.env" });
 
 // connect to database
 connectDB();
@@ -38,11 +33,6 @@ app.use(express.json());
 // Cookie parser
 app.use(cookieParser());
 
-// logging
-if (process.env.NODE_ENV) {
-  app.use(morgan("dev")); // DEV logging middleware
-}
-
 // sanitize data
 app.use(expressMongoSanitize());
 
@@ -56,7 +46,7 @@ app.use(helmet());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
-  max: 100,
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes)
 });
 app.use(limiter);
 
