@@ -3,6 +3,7 @@ import { Document } from "mongoose";
 import asyncHandler from "../middlewares/asyncHandler";
 import UserModel, { InstanceMethods, IUser } from "../models/User";
 import ErrorResponse from "../utils/errorResponse";
+import { ExtendedRequest } from "@/interfaces/express/ExtendedRequest";
 
 // @desc      Register user
 // @route     POST /api/v1/auth/register
@@ -86,7 +87,7 @@ export const logout = asyncHandler(function (
 // @route     GET /api/v1/auth/me
 // @access    Private
 export const getMe = asyncHandler(async function (
-  req: Request,
+  req: ExtendedRequest,
   res: Response,
   next: NextFunction
 ) {

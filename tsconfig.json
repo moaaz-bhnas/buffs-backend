@@ -6,12 +6,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "typeRoots": [
-      "src/interfaces", // custom merged types must be first in a list
-      "node_modules/@types"
-    ]
+    }
   }
 }
