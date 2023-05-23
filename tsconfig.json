@@ -9,7 +9,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "include": ["**/*.ts"],
-    "exclude": ["node_modules"]
+    "typeRoots": [
+      "src/interfaces", // custom merged types must be first in a list
+      "node_modules/@types"
+    ]
   }
 }
