@@ -2,8 +2,8 @@ import express, { Application } from "express";
 import connectDB from "./db";
 import cookieParser from "cookie-parser";
 import auth from "./routes/auth";
-import bootcamps from "./routes/bootcamps";
-import courses from "./routes/courses";
+// import bootcamps from "./routes/bootcamps";
+// import courses from "./routes/courses";
 import errorHandler from "./middlewares/error";
 import path from "path";
 import expressMongoSanitize from "express-mongo-sanitize";
@@ -61,8 +61,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // mount routers
 app.use("/api/v1/auth", auth);
-app.use("/api/v1/bootcamps", bootcamps);
-app.use("/api/v1/courses", courses);
+// app.use("/api/v1/bootcamps", bootcamps);
+// app.use("/api/v1/courses", courses);
 
 // error handling
 app.use(errorHandler);

@@ -6,8 +6,8 @@ import "colorts/lib/string";
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
 
-import Bootcamp from "./models/Bootcamp";
-import Course from "./models/Course";
+// import Bootcamp from "./models/Bootcamp";
+// import Course from "./models/Course";
 import User from "./models/User";
 
 const MONGO_URI = process.env.MONGO_URI!;
@@ -19,27 +19,27 @@ const connectDB = async () => {
 
 connectDB();
 
-const bootcamps: object[] = JSON.parse(
-  fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
-);
+// const bootcamps: object[] = JSON.parse(
+//   fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
+// );
 
-const courses: object[] = JSON.parse(
-  fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8")
-);
+// const courses: object[] = JSON.parse(
+//   fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8")
+// );
 
 const users: object[] = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/users.json`, "utf-8")
 );
 
-console.log("bootcamps count:", bootcamps.length);
-console.log("courses count:", courses.length);
+// console.log("bootcamps count:", bootcamps.length);
+// console.log("courses count:", courses.length);
 console.log("users count:", users.length);
 
 // import into db
 async function importData() {
   try {
-    await Bootcamp.create(bootcamps);
-    await Course.create(courses);
+    // await Bootcamp.create(bootcamps);
+    // await Course.create(courses);
     await User.create(users);
     console.log("Data imported...");
     process.exit();
@@ -50,8 +50,8 @@ async function importData() {
 
 async function deleteData() {
   try {
-    await Bootcamp.deleteMany();
-    await Course.deleteMany();
+    // await Bootcamp.deleteMany();
+    // await Course.deleteMany();
     await User.deleteMany();
     console.log("Data deleted...");
     process.exit();
