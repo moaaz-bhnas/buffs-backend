@@ -6,10 +6,6 @@ import { Command } from "@/interfaces/seeder/Command";
 class GlobalSeeder implements ISeeder {
   private usersSeeder = new UserSeeder();
 
-  constructor() {
-    connectDB();
-  }
-
   async seed(): Promise<void> {
     await this.usersSeeder.seed();
   }
@@ -19,6 +15,8 @@ class GlobalSeeder implements ISeeder {
   }
 
   async run(): Promise<void> {
+    await connectDB();
+
     const command = process.argv[2] as Command;
 
     switch (command) {
