@@ -3,6 +3,19 @@
   "version": "1.0.0",
   "description": "Camper backend API",
   "main": "server.js",
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "node -r tsconfig-paths/register -r ts-node/register",
+    "ext": "ts, js"
+  },
   "scripts": {
     "dev": "npx nodemon src/server.ts",
     "start": "NODE_ENV=production node dist/server.js",
@@ -22,6 +35,7 @@
     "@types/hpp": "^0.2.2",
     "@types/jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -35,9 +49,11 @@
     "morgan": "^1.10.0",
     "node-geocoder": "^4.2.0",
     "slugify": "^1.6.6",
+    "tsconfig-paths": "^4.2.0",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.1",
     "@types/chai": "^4.3.5",
     "@types/express": "^4.17.17",
     "@types/mocha": "^10.0.1",

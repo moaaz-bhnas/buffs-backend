@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "./asyncHandler";
 import UserModel from "../models/User";
+import { ExtendedRequest } from "@/interfaces/express/ExtendedRequest";
 
 interface JwtPayload {
   id: string;
@@ -11,7 +12,7 @@ interface JwtPayload {
 // Protect routes
 // Makes sure it's a logged-in user
 export const protect = asyncHandler(async function (
-  req: Request,
+  req: ExtendedRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -57,7 +58,7 @@ export const protect = asyncHandler(async function (
 });
 
 export function authorize(...roles: string[]) {
-  return function (req: Request, res: Response, next: NextFunction) {
+  return function (req: ExtendedRequest, res: Response, next: NextFunction) {
     if (!roles.includes(req.user.role)) {
       const error = new ErrorResponse({
         message: `User role "${req.user.role}" not authorized to access this route`,
