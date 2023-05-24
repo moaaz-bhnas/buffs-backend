@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
-import asyncHandler from "./asyncHandler";
+import asyncHandler from "../utils/asyncHandler";
 import UserModel from "../models/User";
 import { ExtendedRequest } from "@/interfaces/express/ExtendedRequest";
 
