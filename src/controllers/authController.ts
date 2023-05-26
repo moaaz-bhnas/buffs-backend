@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { Document } from "mongoose";
 import UserModel, { InstanceMethods, IUser } from "@/models/User";
 import ErrorResponse from "@/utils/errorResponse";
-import { ExtendedRequest } from "@/interfaces/express/ExtendedRequest";
 
 class AuthController {
   // todo: set logger
@@ -120,7 +119,7 @@ class AuthController {
    * @route     GET /api/v1/auth/me
    * @access    Private
    */
-  async getMe(req: ExtendedRequest, res: Response, next: NextFunction) {
+  async getMe(req: Request, res: Response, next: NextFunction) {
     res.status(200).json({
       success: true,
       data: req.user,
