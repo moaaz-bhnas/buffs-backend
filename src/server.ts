@@ -70,7 +70,9 @@ app.use(errorHandler);
 const PORT = process.env.PORT;
 
 const server = app.listen(PORT, function () {
-  console.log(`App listening in ${process.env.NODE_ENV} mode on port ${PORT}!`);
+  console.log(
+    `App listening in ${process.env.NODE_ENV} mode on http://localhost:${PORT} 🚀`
+  );
 });
 
 // handle unhandled promise rejections

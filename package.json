@@ -1,8 +1,8 @@
 {
   "name": "camper-api",
   "version": "1.0.0",
-  "description": "Camper backend API",
-  "main": "server.js",
+  "description": "Backend for buffs web application",
+  "main": "src/server.ts",
   "nodemonConfig": {
     "ignore": [
       ".git",
@@ -12,10 +12,11 @@
       "src"
     ],
     "exec": "node -r tsconfig-paths/register -r ts-node/register",
-    "ext": "ts"
+    "ext": "ts,js"
   },
   "scripts": {
     "dev": "npx nodemon src/server.ts",
+    "build": "tsc",
     "start": "NODE_ENV=production node dist/server.js",
     "test": "mocha -r ts-node/register --timeout 100000 src/tests/**/*.ts",
     "test-single": "mocha -r ts-node/register --timeout 100000"
