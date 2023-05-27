@@ -5,6 +5,7 @@ import app from "@/server";
 import UserModel from "@/models/User";
 import { IUser } from "@/interfaces/user/IUser";
 import UserSeeder from "@/seeders/userSeeder";
+import { faker } from "@faker-js/faker";
 
 const userSeeder = new UserSeeder();
 
@@ -123,60 +124,37 @@ describe("GET /api/v1/auth/me", () => {
   });
 });
 
-// // @desc      Forgot password
-// describe("POST /api/v1/auth/forgotpassword", () => {
-//   const user = {
-//     name: "yurio",
-//     email: "yurio@yahoo.com",
-//     password: "yurio228",
-//     role: "user",
-//   };
+// @desc      Forgot password
+describe("POST /api/v1/auth/forgotpassword", () => {
+  const user: IUser = userSeeder.generateUsers(1)[0];
 
-//   before(async function () {
-//     await UserModel.create(user);
-//   });
+  before(async function () {
+    await UserModel.create(user);
+  });
 
-//   after(async function () {
-//     await UserModel.deleteOne({ name: user.name });
-//   });
+  after(async function () {
+    await UserModel.deleteOne({ username: user.username });
+  });
 
-//   describe("Email exists", () => {
-//     const validEmail = { email: user.email };
+  describe("Email exists", () => {
+    const validEmail = { email: user.email };
 
-//     it("should respond with a (200: ok) status code", async () => {
-//       const response = await request(app)
-//         .post("/api/v1/auth/forgotpassword")
-//         .send(validEmail);
-//       expect(response.statusCode).to.equal(200);
-//     });
+    it("should respond with a (200: ok) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(validEmail);
+      expect(response.statusCode).to.equal(200);
+    });
+  });
 
-//     it("should respond with json", async () => {
-//       const response = await request(app)
-//         .post("/api/v1/auth/forgotpassword")
-//         .send(validEmail);
+  describe("No user with that email", () => {
+    const invalidEmail = { email: faker.internet.email() };
 
-//       expect(response.headers["content-type"]).to.include("json");
-//       expect(response.body.success).to.equal(true);
-//     });
-//   });
-
-//   describe("No user with that email", () => {
-//     const invalidEmail = { email: "yuuri@yahoo.com" };
-
-//     it("should respond with a (404: NOT FOUND) status code", async () => {
-//       const response = await request(app)
-//         .post("/api/v1/auth/forgotpassword")
-//         .send(invalidEmail);
-//       expect(response.statusCode).to.equal(404);
-//     });
-
-//     it("should respond with json", async () => {
-//       const response = await request(app)
-//         .post("/api/v1/auth/forgotpassword")
-//         .send(invalidEmail);
-
-//       expect(response.headers["content-type"]).to.include("json");
-//       expect(response.body.success).to.equal(false);
-//     });
-//   });
-// });
+    it("should respond with a (404: NOT FOUND) status code", async () => {
+      const response = await request(app)
+        .post("/api/v1/auth/forgotpassword")
+        .send(invalidEmail);
+      expect(response.statusCode).to.equal(404);
+    });
+  });
+});
