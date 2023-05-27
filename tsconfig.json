@@ -14,11 +14,8 @@
       "@/*": ["./src/*"]
     }
   },
-  /*
-    - This is added to make ts-node read custom type files
-    - https://stackoverflow.com/a/62878548/7982963
-  */
   "ts-node": {
     "files": true
-  }
+  },
+  "include": ["src/**/*.ts"]
 }
