@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
-import User, { IUser } from "@/models/User";
+import User from "@/models/User";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
+import { IUser } from "@/interfaces/user/IUser";
 
 class UserSeeder implements ISeeder {
   private count: number;
@@ -14,7 +15,8 @@ class UserSeeder implements ISeeder {
 
     for (let i = 0; i < this.count; i++) {
       const user: IUser = {
-        name: faker.internet.displayName(),
+        username: faker.internet.userName(),
+        displayName: faker.internet.displayName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
       };

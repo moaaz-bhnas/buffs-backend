@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { CookieOptions, NextFunction, Request, Response } from "express";
 import { Document } from "mongoose";
-import UserModel, { InstanceMethods, IUser } from "@/models/User";
+import UserModel from "@/models/User";
 import ErrorResponse from "@/utils/errorResponse";
+import { IUser } from "@/interfaces/user/IUser";
+import { IUserMethods } from "@/interfaces/user/IUserMethods";
 
 class AuthController {
   // todo: set logger
@@ -10,8 +12,8 @@ class AuthController {
    * Using a cookie is safer than storing the token in the local storage
    * Get token from model, create cookie and send response
    */
-  private sendTokenResponse(
-    user: Document<{}, {}, IUser> & InstanceMethods,
+  private static sendTokenResponse(
+    user: Document<{}, {}, IUser> & IUserMethods,
     statusCode: number,
     res: Response
   ) {
@@ -20,7 +22,7 @@ class AuthController {
 
     const JWT_COOKIE_EXPIRE = Number(process.env.JWT_COOKIE_EXPIRE) ?? 30;
 
-    const options: any = {
+    const options: CookieOptions = {
       expires: new Date(Date.now() + JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
       httpOnly: true, // because we want the cookie to only be accessed through the client-side
     };
@@ -40,12 +42,22 @@ class AuthController {
    * @route     POST /api/v1/auth/register
    * @access    Public: any user can access
    */
-  async register(req: Request, res: Response, next: NextFunction) {
-    const { name, email, password, role } = req.body;
+  async register(
+    req: Request<{}, {}, IUser>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { username, displayName, email, password, role } = req.body;
 
     try {
-      const user = await UserModel.create({ name, email, password, role });
-      this.sendTokenResponse(user, 200, res);
+      const user = await UserModel.create({
+        username,
+        displayName,
+        email,
+        password,
+        role,
+      });
+      AuthController.sendTokenResponse(user, 200, res);
     } catch (error) {
       next(error);
     }
@@ -91,7 +103,7 @@ class AuthController {
         return next(error);
       }
 
-      this.sendTokenResponse(user, 200, res);
+      AuthController.sendTokenResponse(user, 200, res);
     } catch (error) {
       next(error);
     }
