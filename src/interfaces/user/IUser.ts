@@ -3,7 +3,7 @@ export interface IUser {
   displayName: string;
   email: string;
   password: string;
-  role?: string;
+  role: string;
   resetPasswordToken?: string;
   resetPasswordExpire?: number;
   createdAt?: Date;
