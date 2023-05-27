@@ -57,7 +57,7 @@ class AuthController {
         password,
         role,
       });
-      AuthController.sendTokenResponse(user, 200, res);
+      AuthController.sendTokenResponse(user, 201, res);
     } catch (error) {
       next(error);
     }

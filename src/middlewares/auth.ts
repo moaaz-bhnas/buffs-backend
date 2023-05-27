@@ -50,9 +50,9 @@ export const protect = asyncHandler(async function (
     const { id } = decoded as JwtPayload;
     req.user = await UserModel.findById(id);
 
-    next();
+    return next();
   } catch (error) {
-    console.error(error);
+    return next(error);
   }
 });
 

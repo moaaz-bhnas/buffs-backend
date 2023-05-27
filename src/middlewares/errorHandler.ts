@@ -7,7 +7,7 @@ export default function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.error("error.name: ", error.name);
+  console.error("error.name: ", error.name, "error.message", error.message);
 
   let errorResponse = { ...error };
   errorResponse.message = error.message;
@@ -32,6 +32,12 @@ export default function errorHandler(
     const key = Object.keys(keyValue)[0];
     const message = `duplicate field value is passed: { ${key}: ${keyValue[key]} }`;
     errorResponse = new ErrorResponse({ message, statusCode: 400 });
+  }
+
+  // mongoose JsonWebTokenError error
+  if (error.name === "JsonWebTokenError") {
+    const message = `${error.name}: ${error.message}`;
+    errorResponse = new ErrorResponse({ message, statusCode: 401 });
   }
 
   res.status(errorResponse.statusCode || 500).json({
