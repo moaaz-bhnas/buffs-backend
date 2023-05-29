@@ -2,30 +2,20 @@ import { Model, model, Schema } from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { IUser } from "@/interfaces/user/IUser";
+import { IUserMethods } from "@/interfaces/user/IUserMethods";
 
-export interface IUser {
-  name: string;
-  email: string;
-  password: string;
-  role?: string;
-  resetPasswordToken?: string;
-  resetPasswordExpire?: number;
-  createdAt?: Date;
-}
-
-// To understand this: https://stackoverflow.com/a/69781853/7982963
-export interface InstanceMethods {
-  getSignedJwtToken(): string;
-  matchPassword(password: string): Promise<boolean>;
-  getResetPasswordToken(): string;
-}
-
-export interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
+export interface IUserModel extends Model<IUser, {}, IUserMethods> {}
 
 const UserSchema = new Schema<IUser, IUserModel>({
-  name: {
+  username: {
     type: String,
-    required: [true, "Please add a name"],
+    required: [true, "Please add a username"],
+    unique: true,
+  },
+  displayName: {
+    type: String,
+    required: [true, "Please add a display name"],
   },
   email: {
     type: String,

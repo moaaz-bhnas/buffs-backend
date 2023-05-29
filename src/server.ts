@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import auth from "./routes/auth";
 // import bootcamps from "./routes/bootcamps";
 // import courses from "./routes/courses";
-import errorHandler from "./middlewares/error";
+import errorHandler from "./middlewares/errorHandler";
 import path from "path";
 import expressMongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";

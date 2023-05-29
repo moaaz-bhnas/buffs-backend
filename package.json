@@ -18,8 +18,8 @@
     "dev": "npx nodemon src/server.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node dist/server.js",
-    "test": "mocha -r ts-node/register --timeout 100000 src/tests/**/*.ts",
-    "test-single": "mocha -r ts-node/register --timeout 100000"
+    "test": "mocha -r tsconfig-paths/register -r ts-node/register --timeout 100000 src/tests/**/*.ts",
+    "test-single": "mocha -r tsconfig-paths/register -r ts-node/register --timeout 100000"
   },
   "author": "moaaz-bhnas",
   "license": "MIT",
