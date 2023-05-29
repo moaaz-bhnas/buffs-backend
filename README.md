@@ -11,8 +11,8 @@ Backend RESTful API For Buffs social app
 
 ## Contribution
 
-If you're contributing to this project, please ask the admin to add you to Doppler.
-Doppler is a platform where we keep our secrets.
+If you're contributing to this project, please ask the admin to add you to Doppler.  
+Doppler is a platform where we keep our secrets.  
 How to set up Doppler in the project after installation: https://docs.doppler.com/docs/install-cli
 
 ## Installation
