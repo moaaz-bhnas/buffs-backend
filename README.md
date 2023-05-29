@@ -1,16 +1,6 @@
-# Camper API
+# Buffs Back-End
 
-Backend RESTful API For Bootcamp Directory App
-
-## Usage
-
-Rename "config/config.env.env" to "config/config.env" and update the values/settings to your own
-
-## Live
-
-https://camper-api-production.herokuapp.com/
-
-Extensive documentation with examples: [documenter.getpostman](https://documenter.getpostman.com/view/5058453/UVyxPCwG)
+Backend RESTful API For Buffs social app
 
 ## Built With
 
@@ -18,6 +8,12 @@ Extensive documentation with examples: [documenter.getpostman](https://documente
 - Node / Express
 - Mongoose
 - Mocha, Chai and Supertest
+
+## Contribution
+
+If you're contributing to this project, please ask the admin to add you to Doppler.
+Doppler is a platform where we keep our secrets.
+How to set up Doppler in the project after installation: https://docs.doppler.com/docs/install-cli
 
 ## Installation
 
@@ -31,18 +27,20 @@ cd camper-api
 # Install dependencies
 npm install
 
+# Set up doppler to dev environment
+
 # Run the app
-npm run dev
+doppler run -- npm run dev
 ```
 
 ## Database Seeder
 
-To seed the database with users, bootcamps and courses data from the "\_data" folder, run
+To seed the database with users and movies, run
 
 ```
 # Destroy all data
-npx nodemon src/seeder d
+doppler run -- npx nodemon src/seeders/globalSeeder.ts d
 
 # Import all data
-npx nodemon src/seeder i
+doppler run -- npx nodemon src/seeders/globalSeeder.ts i
 ```
