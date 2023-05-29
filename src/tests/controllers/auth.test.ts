@@ -22,11 +22,11 @@ function generateUser() {
   return user;
 }
 
+const user = generateUser();
+
 // @desc      Register user
 describe("POST /api/v1/auth/register", () => {
   describe("Email is valid", () => {
-    const user: IUser = generateUser();
-
     afterEach(async function () {
       await UserModel.deleteOne({
         username: user.username,
@@ -56,7 +56,7 @@ describe("POST /api/v1/auth/register", () => {
 
 // @desc      Login user
 describe("POST /api/v1/auth/login", () => {
-  const user: IUser = generateUser();
+  const user = generateUser();
 
   before(async function () {
     await addUserToDB(user);
@@ -102,7 +102,7 @@ describe("GET /api/v1/auth/logout", () => {
 
 // @desc      Get logged-in user via token
 describe("GET /api/v1/auth/me", () => {
-  const user: IUser = generateUser();
+  const user = generateUser();
   let token = "";
 
   // Runs before all tests
@@ -139,8 +139,6 @@ describe("GET /api/v1/auth/me", () => {
 
 // @desc      Forgot password
 describe("POST /api/v1/auth/forgotpassword", () => {
-  const user: IUser = generateUser();
-
   before(async function () {
     await addUserToDB(user);
   });
