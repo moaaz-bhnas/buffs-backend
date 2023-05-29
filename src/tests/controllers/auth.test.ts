@@ -17,10 +17,15 @@ async function removeUserFromDB(username: string) {
   await UserModel.deleteOne({ username });
 }
 
+function generateUser() {
+  const user: IUser = userSeeder.generateUsers(1)[0];
+  return user;
+}
+
 // @desc      Register user
 describe("POST /api/v1/auth/register", () => {
   describe("Email is valid", () => {
-    const user: IUser = userSeeder.generateUsers(1)[0];
+    const user: IUser = generateUser();
 
     afterEach(async function () {
       await UserModel.deleteOne({
@@ -37,7 +42,7 @@ describe("POST /api/v1/auth/register", () => {
   });
 
   describe("Email is not valid", () => {
-    const invalidUser: IUser = userSeeder.generateUsers(1)[0];
+    const invalidUser: IUser = generateUser();
     invalidUser.email = "yuuri@yahoo";
 
     it("should respond with a (400: bad request) status code", async () => {
@@ -51,7 +56,7 @@ describe("POST /api/v1/auth/register", () => {
 
 // @desc      Login user
 describe("POST /api/v1/auth/login", () => {
-  const user: IUser = userSeeder.generateUsers(1)[0];
+  const user: IUser = generateUser();
 
   before(async function () {
     await addUserToDB(user);
@@ -97,7 +102,7 @@ describe("GET /api/v1/auth/logout", () => {
 
 // @desc      Get logged-in user via token
 describe("GET /api/v1/auth/me", () => {
-  const user: IUser = userSeeder.generateUsers(1)[0];
+  const user: IUser = generateUser();
   let token = "";
 
   // Runs before all tests
@@ -134,7 +139,7 @@ describe("GET /api/v1/auth/me", () => {
 
 // @desc      Forgot password
 describe("POST /api/v1/auth/forgotpassword", () => {
-  const user: IUser = userSeeder.generateUsers(1)[0];
+  const user: IUser = generateUser();
 
   before(async function () {
     await addUserToDB(user);
