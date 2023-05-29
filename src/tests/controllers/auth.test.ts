@@ -9,6 +9,14 @@ import { faker } from "@faker-js/faker";
 
 const userSeeder = new UserSeeder();
 
+async function addUserToDB(user: IUser) {
+  await UserModel.create(user);
+}
+
+async function removeUserFromDB(username: string) {
+  await UserModel.deleteOne({ username });
+}
+
 // @desc      Register user
 describe("POST /api/v1/auth/register", () => {
   describe("Email is valid", () => {
@@ -46,11 +54,11 @@ describe("POST /api/v1/auth/login", () => {
   const user: IUser = userSeeder.generateUsers(1)[0];
 
   before(async function () {
-    await UserModel.create(user);
+    await addUserToDB(user);
   });
 
   after(async function () {
-    await UserModel.deleteOne({ username: user.username });
+    await removeUserFromDB(user.username);
   });
 
   describe("Email is valid", () => {
@@ -129,11 +137,11 @@ describe("POST /api/v1/auth/forgotpassword", () => {
   const user: IUser = userSeeder.generateUsers(1)[0];
 
   before(async function () {
-    await UserModel.create(user);
+    await addUserToDB(user);
   });
 
   after(async function () {
-    await UserModel.deleteOne({ username: user.username });
+    await removeUserFromDB(user.username);
   });
 
   describe("Email exists", () => {
