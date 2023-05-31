@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
-import asyncHandler from "./asyncHandler";
+import asyncHandler from "../utils/asyncHandler";
 import UserModel from "../models/User";
-import { ExtendedRequest } from "@/interfaces/express/ExtendedRequest";
 
 interface JwtPayload {
   id: string;
@@ -12,7 +11,7 @@ interface JwtPayload {
 // Protect routes
 // Makes sure it's a logged-in user
 export const protect = asyncHandler(async function (
-  req: ExtendedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
@@ -51,15 +50,15 @@ export const protect = asyncHandler(async function (
     const { id } = decoded as JwtPayload;
     req.user = await UserModel.findById(id);
 
-    next();
+    return next();
   } catch (error) {
-    console.error(error);
+    return next(error);
   }
 });
 
 export function authorize(...roles: string[]) {
-  return function (req: ExtendedRequest, res: Response, next: NextFunction) {
-    if (!roles.includes(req.user.role)) {
+  return function (req: Request, res: Response, next: NextFunction) {
+    if (req.user && !roles.includes(req.user.role)) {
       const error = new ErrorResponse({
         message: `User role "${req.user.role}" not authorized to access this route`,
         statusCode: 403,

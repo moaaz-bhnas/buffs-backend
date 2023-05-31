@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
-import User, { IUser } from "@/models/User";
+import User from "@/models/User";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
+import { IUser } from "@/interfaces/user/IUser";
+import { UserRole } from "@/interfaces/user/UserRole";
 
 class UserSeeder implements ISeeder {
   private count: number;
@@ -9,14 +11,16 @@ class UserSeeder implements ISeeder {
     this.count = count;
   }
 
-  private generateUsers(): IUser[] {
+  generateUsers(count = this.count): IUser[] {
     const users: IUser[] = [];
 
-    for (let i = 0; i < this.count; i++) {
+    for (let i = 0; i < count; i++) {
       const user: IUser = {
-        name: faker.internet.displayName(),
+        username: faker.internet.userName(),
+        displayName: faker.internet.displayName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
+        role: UserRole.user,
       };
 
       users.push(user);
