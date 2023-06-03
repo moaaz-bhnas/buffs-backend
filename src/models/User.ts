@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { IUser } from "@/interfaces/user/IUser";
 import { IUserMethods } from "@/interfaces/user/IUserMethods";
+import emailRegex from "@/utils/regex/emailRegex";
 
 export interface IUserModel extends Model<IUser, {}, IUserMethods> {}
 
@@ -21,10 +22,7 @@ const UserSchema = new Schema<IUser, IUserModel>({
     type: String,
     required: [true, "Please add an email"],
     unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please add a valid email",
-    ],
+    match: [emailRegex, "Please add a valid email"],
   },
   role: {
     type: String,
