@@ -1,7 +1,8 @@
 import express, { Application } from "express";
 import connectDB from "./db";
 import cookieParser from "cookie-parser";
-import auth from "./routes/auth";
+import authRouter from "./routes/authRouter";
+import usersRouter from "@/routes/usersRouter";
 // import bootcamps from "./routes/bootcamps";
 // import courses from "./routes/courses";
 import errorHandler from "./middlewares/errorHandler";
@@ -60,7 +61,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 // mount routers
-app.use("/api/v1/auth", auth);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", usersRouter);
 // app.use("/api/v1/bootcamps", bootcamps);
 // app.use("/api/v1/courses", courses);
 
