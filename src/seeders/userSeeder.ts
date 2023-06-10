@@ -11,17 +11,22 @@ class UserSeeder implements ISeeder {
     this.count = count;
   }
 
+  generateUser(): IUser {
+    const user: IUser = {
+      username: faker.internet.userName(),
+      displayName: faker.internet.displayName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      role: UserRole.user,
+    };
+    return user;
+  }
+
   generateUsers(count = this.count): IUser[] {
     const users: IUser[] = [];
 
     for (let i = 0; i < count; i++) {
-      const user: IUser = {
-        username: faker.internet.userName(),
-        displayName: faker.internet.displayName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        role: UserRole.user,
-      };
+      const user: IUser = this.generateUser();
 
       users.push(user);
     }
