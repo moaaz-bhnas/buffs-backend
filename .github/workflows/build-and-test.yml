@@ -25,6 +25,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+
+      - uses: DopplerHQ/secrets-fetch-action@v1.1.1
+        id: doppler
+        with:
+          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test
