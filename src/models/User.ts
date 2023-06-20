@@ -1,6 +1,7 @@
 import { Model, model, Schema } from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import gravatar from "gravatar";
 import jwt from "jsonwebtoken";
 import { IUser } from "@/interfaces/user/IUser";
 import { IUserMethods } from "@/interfaces/user/IUserMethods";
@@ -35,6 +36,7 @@ const UserSchema = new Schema<IUser, IUserModel>({
     minlength: 6,
     select: false,
   },
+  avatar: String,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
@@ -49,6 +51,14 @@ UserSchema.pre("save", async function encryptPassword(next) {
     next();
   }
 
+  // avatar
+  this.avatar = gravatar.url(this.email, {
+    s: "200",
+    protocol: "https",
+    d: "https://i.ibb.co/26mZL8Q/avatar-thinking-3-svgrepo-com.png",
+  });
+
+  // password
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -57,7 +67,6 @@ UserSchema.pre("save", async function encryptPassword(next) {
 فايدة التوكن انها بتتبعت مع اي ريكويست بعد تسجيل الدخول
 for authentication
 */
-
 UserSchema.methods.getSignedJwtToken = function (): string {
   // "this" here refers to the instance (document)
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET ?? "", {
