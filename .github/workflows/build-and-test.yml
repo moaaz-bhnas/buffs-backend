@@ -9,6 +9,14 @@ on:
   pull_request:
     branches: [staging]
 
+env:
+  JWT_COOKIE_EXPIRE: ${{secrets.JWT_COOKIE_EXPIRE}}
+  JWT_EXPIRE: ${{secrets.JWT_EXPIRE}}
+  JWT_SECRET: ${{secrets.JWT_SECRET}}
+  MONGO_URI: ${{secrets.MONGO_URI}}
+  NODE_ENV: ${{secrets.NODE_ENV}}
+  PORT: ${{secrets.PORT}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,12 +33,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-
-      - uses: DopplerHQ/secrets-fetch-action@v1.1.1
-        id: doppler
-        with:
-          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
-      - run: echo "DOPPLER_PROJECT is ${{ steps.doppler.outputs.DOPPLER_PROJECT }} and mongo URI is ${{steps.doppler.outputs.MONGO_URI}}"
 
       - run: npm ci
       - run: npm run build --if-present
