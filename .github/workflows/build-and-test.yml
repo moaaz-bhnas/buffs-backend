@@ -30,6 +30,7 @@ jobs:
         id: doppler
         with:
           doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+      - run: echo "DOPPLER_PROJECT is ${{ steps.doppler.outputs.DOPPLER_PROJECT }} and mongo URI is ${{steps.doppler.outputs.MONGO_URI}}"
 
       - run: npm ci
       - run: npm run build --if-present
