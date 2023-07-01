@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
-import User from "@/models/User";
+import User from "@/models/UserModel";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
 import { IUser } from "@/interfaces/user/IUser";
 import { UserRole } from "@/interfaces/user/UserRole";
 
-class UserSeeder implements ISeeder {
+class UsersSeeder implements ISeeder {
   private count: number;
 
   constructor(count = 20) {
@@ -56,4 +56,4 @@ class UserSeeder implements ISeeder {
   }
 }
 
-export default UserSeeder;
+export default UsersSeeder;
