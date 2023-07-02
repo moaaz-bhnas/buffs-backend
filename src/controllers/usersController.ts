@@ -1,6 +1,6 @@
 import UserModel from "@/models/UserModel";
 import ErrorResponse from "@/utils/errorResponse";
-import { CookieOptions, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 class UsersController {
   // todo: set logger

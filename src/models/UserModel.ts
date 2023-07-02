@@ -9,41 +9,42 @@ import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 
 export interface IUserModel extends Model<IUser, {}, IUserMethods> {}
 
-const UserSchema = new Schema<IUser, IUserModel>({
-  username: {
-    type: String,
-    required: [true, "Please add a username"],
-    unique: true,
+const UserSchema = new Schema<IUser, IUserModel>(
+  {
+    username: {
+      type: String,
+      required: [true, "Please add a username"],
+      unique: true,
+    },
+    displayName: {
+      type: String,
+      required: [true, "Please add a display name"],
+    },
+    email: {
+      type: String,
+      required: [true, "Please add an email"],
+      unique: true,
+      match: [emailValidationRegex, "Please add a valid email"],
+    },
+    role: {
+      type: String,
+      enum: ["user", "publisher"],
+      default: "user",
+    },
+    password: {
+      type: String,
+      required: [true, "Please add a password"],
+      minlength: 6,
+      select: false,
+    },
+    avatar: String,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
-  displayName: {
-    type: String,
-    required: [true, "Please add a display name"],
-  },
-  email: {
-    type: String,
-    required: [true, "Please add an email"],
-    unique: true,
-    match: [emailValidationRegex, "Please add a valid email"],
-  },
-  role: {
-    type: String,
-    enum: ["user", "publisher"],
-    default: "user",
-  },
-  password: {
-    type: String,
-    required: [true, "Please add a password"],
-    minlength: 6,
-    select: false,
-  },
-  avatar: String,
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // encrypt password using bcrypt
 UserSchema.pre("save", async function encryptPassword(next) {

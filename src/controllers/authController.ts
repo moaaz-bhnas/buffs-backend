@@ -4,6 +4,7 @@ import UserModel from "@/models/UserModel";
 import ErrorResponse from "@/utils/errorResponse";
 import { IUser } from "@/interfaces/user/IUser";
 import { IUserMethods } from "@/interfaces/user/IUserMethods";
+import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
 class AuthController {
   // todo: set logger
@@ -44,20 +45,12 @@ class AuthController {
    * @access    Public: any user can access
    */
   async register(
-    req: Request<{}, {}, IUser>,
+    req: Request<{}, {}, RegisteringUser>,
     res: Response,
     next: NextFunction
   ) {
-    const { username, displayName, email, password, role } = req.body;
-
     try {
-      const user = await UserModel.create({
-        username,
-        displayName,
-        email,
-        password,
-        role,
-      });
+      const user = await UserModel.create(req.body);
       AuthController.sendTokenResponse(user, 201, res);
     } catch (error) {
       next(error);

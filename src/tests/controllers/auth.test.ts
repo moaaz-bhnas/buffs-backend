@@ -3,13 +3,13 @@ import { expect } from "chai";
 import request from "supertest";
 import app from "@/server";
 import UserModel from "@/models/UserModel";
-import { IUser } from "@/interfaces/user/IUser";
 import UserSeeder from "@/seeders/usersSeeder";
 import { faker } from "@faker-js/faker";
+import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
 const userSeeder = new UserSeeder();
 
-async function addUserToDB(user: IUser) {
+async function addUserToDB(user: RegisteringUser) {
   await UserModel.create(user);
 }
 
@@ -37,7 +37,7 @@ describe("POST /api/v1/auth/register", () => {
   });
 
   describe("Email is not valid", () => {
-    const invalidUser: IUser = userSeeder.generateUser();
+    const invalidUser = userSeeder.generateUser();
     invalidUser.email = "yuuri@yahoo";
 
     it("should respond with a (400: bad request) status code", async () => {
