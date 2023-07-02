@@ -7,7 +7,7 @@ export interface IUser {
   /**
    * Created by a Mongoose middleware before save
    */
-  avatar?: string;
+  avatar: string;
   resetPasswordToken?: string;
   resetPasswordExpire?: number;
   createdAt?: Date;

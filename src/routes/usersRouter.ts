@@ -3,10 +3,12 @@ import advancedResults from "@/middlewares/advancedResults";
 import UserModel from "@/models/UserModel";
 import usersController from "@/controllers/usersController";
 
-const router = Router();
+const usersRouter = Router();
 
-router.route("/").get(advancedResults(UserModel), usersController.getUsers);
+usersRouter
+  .route("/")
+  .get(advancedResults(UserModel), usersController.getUsers);
 
-router.route("/:id").get(usersController.getUser);
+usersRouter.route("/:id").get(usersController.getUser);
 
-export default router;
+export default usersRouter;

@@ -13,6 +13,7 @@ import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
 import cors from "cors";
+import reviewsRouter from "./routes/reviewsRouter";
 
 // connect to database
 connectDB();
@@ -63,8 +64,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // mount routers
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
-// app.use("/api/v1/bootcamps", bootcamps);
-// app.use("/api/v1/courses", courses);
+app.use("/api/v1/reviews", reviewsRouter);
 
 // error handling
 app.use(errorHandler);
