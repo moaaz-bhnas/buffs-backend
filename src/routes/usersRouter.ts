@@ -1,6 +1,6 @@
 import { Router } from "express";
 import advancedResults from "@/middlewares/advancedResults";
-import UserModel from "@/models/User";
+import UserModel from "@/models/UserModel";
 import usersController from "@/controllers/usersController";
 
 const router = Router();

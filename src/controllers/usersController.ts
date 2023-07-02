@@ -1,4 +1,4 @@
-import UserModel from "@/models/User";
+import UserModel from "@/models/UserModel";
 import ErrorResponse from "@/utils/errorResponse";
 import { CookieOptions, NextFunction, Request, Response } from "express";
 

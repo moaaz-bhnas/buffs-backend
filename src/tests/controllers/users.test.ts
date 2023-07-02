@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
-import UserSeeder from "@/seeders/userSeeder";
-import UserModel from "@/models/User";
+import UserSeeder from "@/seeders/usersSeeder";
+import UserModel from "@/models/UserModel";
 
 const userSeeder = new UserSeeder();
 

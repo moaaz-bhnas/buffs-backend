@@ -2,9 +2,9 @@ import mocha from "mocha";
 import { expect } from "chai";
 import request from "supertest";
 import app from "@/server";
-import UserModel from "@/models/User";
+import UserModel from "@/models/UserModel";
 import { IUser } from "@/interfaces/user/IUser";
-import UserSeeder from "@/seeders/userSeeder";
+import UserSeeder from "@/seeders/usersSeeder";
 import { faker } from "@faker-js/faker";
 
 const userSeeder = new UserSeeder();
