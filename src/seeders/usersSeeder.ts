@@ -3,6 +3,7 @@ import User from "@/models/UserModel";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
 import { IUser } from "@/interfaces/user/IUser";
 import { UserRole } from "@/interfaces/user/UserRole";
+import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
 class UsersSeeder implements ISeeder {
   private count: number;
@@ -11,8 +12,8 @@ class UsersSeeder implements ISeeder {
     this.count = count;
   }
 
-  generateUser(): IUser {
-    const user: IUser = {
+  generateUser(): RegisteringUser {
+    const user: RegisteringUser = {
       username: faker.internet.userName(),
       displayName: faker.internet.displayName(),
       email: faker.internet.email(),
@@ -22,11 +23,11 @@ class UsersSeeder implements ISeeder {
     return user;
   }
 
-  generateUsers(count = this.count): IUser[] {
-    const users: IUser[] = [];
+  generateUsers(count = this.count): RegisteringUser[] {
+    const users: RegisteringUser[] = [];
 
     for (let i = 0; i < count; i++) {
-      const user: IUser = this.generateUser();
+      const user: RegisteringUser = this.generateUser();
 
       users.push(user);
     }
