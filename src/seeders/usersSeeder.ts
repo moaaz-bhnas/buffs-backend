@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import User from "@/models/UserModel";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
-import { IUser } from "@/interfaces/user/IUser";
 import { UserRole } from "@/interfaces/user/UserRole";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
