@@ -49,7 +49,6 @@ class UsersSeeder implements ISeeder {
     try {
       await User.deleteMany();
       console.log("Deleted users data 😔");
-      process.exit();
     } catch (error) {
       console.error(error);
     }

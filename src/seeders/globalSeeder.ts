@@ -4,6 +4,10 @@ import connectDB from "@/db";
 import { Command } from "@/interfaces/seeder/Command";
 import ReviewsSeeder from "./reviewsSeeder";
 
+/**
+ * Seeds users and reviews data to the database for testing
+ * ONLY USE IT IN DEVELOPMENT MODE
+ */
 class GlobalSeeder implements ISeeder {
   private usersSeeder = new UsersSeeder();
   private reviewsSeeder = new ReviewsSeeder();
@@ -22,6 +26,12 @@ class GlobalSeeder implements ISeeder {
     await connectDB();
 
     const command = process.argv[2] as Command;
+
+    if (!command) {
+      throw new Error(
+        "Please add an argument i (import) / d (delete) to the command."
+      );
+    }
 
     switch (command) {
       case Command.import:

@@ -1,3 +1,5 @@
+import { MovieApiClient } from "@/apis/movies-api-client";
+import { TmdbMovie } from "@/interfaces/movies/TmdbMovie";
 import { IReview } from "@/interfaces/reviews/IReview";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
 import { IUser } from "@/interfaces/user/IUser";
@@ -5,14 +7,49 @@ import ReviewModel from "@/models/ReviewModel";
 import UserModel from "@/models/UserModel";
 import { faker } from "@faker-js/faker";
 
+interface UserReview {
+  rating: number;
+  text: string;
+}
+
 class ReviewsSeeder implements ISeeder {
   private count: number;
+  private randomReviews = [
+    { rating: 8.5, text: "Great movie, highly recommended!" },
+    { rating: 9.2, text: "One of the best movies I've seen!" },
+    { rating: 7.9, text: "Solid film, worth watching." },
+    { rating: 6.5, text: "Decent movie, but nothing special." },
+    { rating: 8.8, text: "Incredible performance by the lead actor." },
+    { rating: 7.2, text: "Good movie, enjoyed it." },
+    { rating: 9.7, text: "A masterpiece! Must-watch!" },
+    { rating: 5.6, text: "Not my cup of tea, didn't like it." },
+    { rating: 8.1, text: "Engaging storyline, kept me hooked." },
+    { rating: 6.9, text: "Average movie, had its moments." },
+    { rating: 7.8, text: "Well-directed with stunning visuals." },
+    { rating: 9.5, text: "Absolutely loved it, a must-see!" },
+    { rating: 6.3, text: "Fairly entertaining, but forgettable." },
+    {
+      rating: 8.6,
+      text: "Captivating plot, couldn't take my eyes off the screen.",
+    },
+    { rating: 7.1, text: "Decent performances, but lacked depth." },
+    { rating: 9.3, text: "Brilliant film, left me speechless." },
+    { rating: 8.0, text: "Solid movie, would recommend it." },
+    { rating: 7.4, text: "Enjoyable flick, good for a casual watch." },
+    { rating: 7.7, text: "Well-paced and engaging." },
+    { rating: 8.9, text: "Impressive cinematography, visually stunning." },
+  ];
 
   constructor(count = 20) {
     this.count = count;
   }
 
-  generateReview(user: IUser, friends: IUser[]): IReview {
+  generateReview(
+    user: IUser,
+    friends: IUser[],
+    movie: TmdbMovie,
+    userReview: UserReview
+  ): IReview {
     const friendsUsernames = friends.map((friend) => friend.username);
 
     const review: IReview = {
@@ -22,18 +59,17 @@ class ReviewsSeeder implements ISeeder {
         avatar: user.avatar || "",
       },
       movieDetails: {
-        tmdbId: 767,
-        title: "Harry Potter and the Half-Blood Prince",
-        posterPath: "/z7uo9zmQdQwU5ZJHFpv2Upl30i1.jpg",
-        releaseDate: "2009-07-07",
-        genres: ["Adventure", "Fantasy"],
-        summary:
-          "As Lord Voldemort tightens his grip on both the Muggle and wizarding worlds, Hogwarts is no longer a safe haven. Harry suspects perils may even lie within the castle, but Dumbledore is more intent upon preparing him for the final battle fast approaching. Together they work to find the key to unlock Voldemorts defenses and to this end, Dumbledore recruits his old friend and colleague Horace Slughorn, whom he believes holds crucial information. Even as the decisive showdown looms, romance blossoms for Harry, Ron, Hermione and their classmates. Love is in the air, but danger lies ahead and Hogwarts may never be the same again.",
-        tmdbRating: 7.7,
-        director: "David Yates",
+        tmdbId: movie.id,
+        title: movie.title,
+        posterPath: movie.complete_poster_path || "",
+        releaseDate: movie.release_date,
+        genres: movie.genres?.map((genre) => genre.name) || [],
+        summary: movie.overview,
+        tmdbRating: movie.vote_average,
+        director: "Abdullah Bhnas",
       },
-      rating: 9,
-      review: "Awesome!",
+      rating: userReview.rating,
+      review: userReview.text,
       likers: friendsUsernames,
       savers: friendsUsernames,
       sharers: friendsUsernames,
@@ -44,22 +80,33 @@ class ReviewsSeeder implements ISeeder {
   }
 
   async generateReviews(count = this.count): Promise<IReview[]> {
+    // 1. Get users from the database
     const users = await UserModel.find().limit(count);
 
-    if (users.length < count) {
-      throw new Error(
-        `Please make sure number of users in the database is >= ${count}`
-      );
+    if (users.length === 0) {
+      throw new Error(`Please seed users to create reviews with their data 🙄`);
     }
 
+    // 2. Get random movies
+    const movieApiClient = new MovieApiClient();
+    const randomMoviesResult = await movieApiClient.getRandomMovies(count);
+
+    if (randomMoviesResult.isErr()) {
+      throw new Error(`Failed to get random ${count} movies.`);
+    }
+
+    // 3. Generate reviews
     const reviews: IReview[] = [];
 
     for (let i = 0; i < count; i++) {
+      const user = faker.helpers.arrayElement(users);
+      const movie = faker.helpers.arrayElement(randomMoviesResult.value);
       const friends = faker.helpers.arrayElements(users, {
         min: 1,
-        max: count,
+        max: users.length,
       });
-      const review = this.generateReview(users[i], friends);
+      const userReview = faker.helpers.arrayElement(this.randomReviews);
+      const review = this.generateReview(user, friends, movie, userReview);
       reviews.push(review);
     }
 
@@ -81,7 +128,6 @@ class ReviewsSeeder implements ISeeder {
     try {
       await ReviewModel.deleteMany();
       console.log("Deleted reviews data 😔");
-      process.exit();
     } catch (error) {
       console.error(error);
     }
