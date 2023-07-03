@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../utils/asyncHandler";
 import UserModel from "../models/UserModel";
+import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
 
 interface JwtPayload {
   id: string;
@@ -30,11 +31,8 @@ export const protect = asyncHandler(async function (
     */
   }
 
-  console.log("token: ", typeof token);
-
   // Make sure token exists
   if (!token || token === "null" || token === "none") {
-    console.log("ErrorResponse");
     const error = new ErrorResponse({
       message: "Not authorized to access this route",
       statusCode: 401,
@@ -48,7 +46,17 @@ export const protect = asyncHandler(async function (
 
     // logged-in user
     const { id } = decoded as JwtPayload;
-    req.user = await UserModel.findById(id);
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+      const error = new ErrorResponse({
+        message: `User with id: ${id} doesn't exist`,
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+      return next(error);
+    }
+
+    req.user = user;
 
     return next();
   } catch (error) {
