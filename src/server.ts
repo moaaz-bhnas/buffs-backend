@@ -12,7 +12,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import reviewsRouter from "./routes/reviewsRouter";
 
 // connect to database
@@ -56,7 +56,15 @@ app.use(limiter);
 app.use(hpp());
 
 // Enable CORS
-app.use(cors());
+const corsOptions: CorsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "http://127.0.0.1",
+    // your origins here
+  ],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // set static folder
 app.use(express.static(path.join(__dirname, "public")));

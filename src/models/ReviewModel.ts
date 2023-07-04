@@ -58,7 +58,7 @@ const ReviewSchema = new Schema<IReview>(
     },
     review: {
       type: String,
-      required: [true, "Please add a review"],
+      default: "",
     },
     likers: {
       type: [String],
