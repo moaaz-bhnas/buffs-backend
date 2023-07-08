@@ -35,5 +35,11 @@ export interface TmdbMovie {
    * to generate "genres" which contains id, string of genre (list)
    */
   genres?: GenreDetails[];
+
+  director?: {
+    tmdbId: number;
+    name: string;
+    tmdbCreditId: string;
+  };
   // other data we don't care about
 }

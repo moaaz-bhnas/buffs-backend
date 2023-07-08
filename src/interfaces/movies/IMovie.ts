@@ -6,5 +6,9 @@ export interface IMovie {
   genres: string[];
   summary: string;
   tmdbRating: number;
-  director: string;
+  director: {
+    tmdbId: number;
+    name: string;
+    tmdbCreditId: string;
+  };
 }

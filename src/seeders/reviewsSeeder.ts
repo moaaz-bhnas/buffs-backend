@@ -66,7 +66,11 @@ class ReviewsSeeder implements ISeeder {
         genres: movie.genres?.map((genre) => genre.name) || [],
         summary: movie.overview,
         tmdbRating: movie.vote_average,
-        director: "Abdullah Bhnas",
+        director: {
+          tmdbId: movie.director?.tmdbId || 0,
+          name: movie.director?.name || "",
+          tmdbCreditId: movie.director?.tmdbCreditId || "",
+        },
       },
       rating: userReview.rating,
       review: userReview.text,

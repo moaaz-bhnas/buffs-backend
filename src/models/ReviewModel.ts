@@ -48,8 +48,18 @@ const ReviewSchema = new Schema<IReview>(
         required: [true, "Please add the tmdb rating"],
       },
       director: {
-        type: String,
-        required: [true, "Please add a director"],
+        tmdbId: {
+          type: Number,
+          required: [true, "Please add a director tmdb id"],
+        },
+        name: {
+          type: String,
+          required: [true, "Please add a director name"],
+        },
+        tmdbCreditId: {
+          type: String,
+          required: [true, "Please add a director tmdb credit id"],
+        },
       },
     },
     rating: {

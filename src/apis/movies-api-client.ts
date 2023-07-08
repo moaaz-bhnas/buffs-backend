@@ -7,6 +7,7 @@ import { TmdbMovie } from "@/interfaces/movies/TmdbMovie";
 import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
 import ApiClient from "@/utils/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
+import { TmdbMovieCredits } from "@/interfaces/movies/TmdbMovieCredits";
 
 export class MovieApiClient {
   private apiKey = process.env.TMDB_API_KEY;
@@ -116,6 +117,12 @@ export class MovieApiClient {
       movies = moviesWithGenresDetails.value;
     }
 
+    // map directors
+    const moviesWithDirectors = await this.mapDirectorsToMovies(movies);
+    if (moviesWithDirectors.isOk()) {
+      movies = moviesWithDirectors.value;
+    }
+
     return ok(movies.slice(0, count));
   }
 
@@ -207,6 +214,56 @@ export class MovieApiClient {
         }
       }
       movie.genres = genres;
+      updatedMovies.push(movie);
+    }
+
+    return ok(updatedMovies);
+  }
+
+  private async getMovieCredits(
+    movieId: number
+  ): Promise<Result<TmdbMovieCredits, ApiError>> {
+    const result = await this.movieApiClient.get<TmdbMovieCredits>(
+      `${this.apiBaseUrl}/${this.apiVersion}/movie/${movieId}/credits?api_key=${this.apiKey}&language=${this.apiResultsLanguage}`
+    );
+
+    if (result.isErr()) {
+      console.error(`Failed to get credits for movie id: ${movieId}`, {
+        error: result.error,
+      });
+      return err(result.error);
+    }
+
+    return ok(result.value);
+  }
+
+  private async mapDirectorsToMovies(
+    movies: TmdbMovie[]
+  ): Promise<Result<TmdbMovie[], ApiError>> {
+    const updatedMovies: TmdbMovie[] = [];
+
+    for (const movie of movies) {
+      const movieCreditsResult = await this.getMovieCredits(movie.id);
+
+      if (movieCreditsResult.isErr()) {
+        console.error(`Failed to get credits for movie id: ${movie.id}`, {
+          error: movieCreditsResult.error,
+        });
+        return err(movieCreditsResult.error);
+      }
+
+      const director = movieCreditsResult.value.crew.find(
+        (crewMember) => crewMember.job === "Director"
+      );
+
+      if (director) {
+        movie.director = {
+          tmdbId: director.id,
+          name: director.name,
+          tmdbCreditId: director.credit_id,
+        };
+      }
+
       updatedMovies.push(movie);
     }
 
