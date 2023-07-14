@@ -17,6 +17,8 @@
   "scripts": {
     "dev": "npx nodemon src/server.ts",
     "build": "tsc",
+    "seed": "npx nodemon src/seeders/globalSeeder.ts i",
+    "unseed": "npx nodemon src/seeders/globalSeeder.ts d",
     "start": "NODE_ENV=production node dist/server.js",
     "test": "mocha -r tsconfig-paths/register -r ts-node/register --exit --timeout 100000 src/tests/**/*.ts",
     "test-single": "mocha -r tsconfig-paths/register -r ts-node/register --exit --timeout 100000"
