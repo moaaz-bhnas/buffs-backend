@@ -1,4 +1,4 @@
-export enum ImageType {
+export enum TmdbImageType {
   backdrop = "backdrop",
   poster = "poster",
   logo = "logo",

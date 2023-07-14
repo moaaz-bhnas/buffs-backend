@@ -1,6 +1,6 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import { Document } from "mongoose";
-import UserModel from "@/models/UserModel";
+import UserModel from "@/schemas/UserSchema";
 import ErrorResponse from "@/utils/errorResponse";
 import { IUser } from "@/interfaces/user/IUser";
 import { IUserMethods } from "@/interfaces/user/IUserMethods";

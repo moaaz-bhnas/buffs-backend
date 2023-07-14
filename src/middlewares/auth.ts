@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import ErrorResponse from "../utils/errorResponse";
 import asyncHandler from "../utils/asyncHandler";
-import UserModel from "../models/UserModel";
+import UserModel from "../schemas/UserSchema";
 import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
 
 interface JwtPayload {

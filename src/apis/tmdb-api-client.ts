@@ -1,34 +1,34 @@
 import { ApiError } from "@/interfaces/api-client/ApiError";
 import { IApiClient } from "@/interfaces/api-client/IApiClient";
-import { GenreDetails } from "@/interfaces/movies/GenreDetails";
-import { ImageSize } from "@/interfaces/movies/ImageSize";
-import { MoviesApiDiscoverResponse } from "@/interfaces/movies/MoviesApiDiscoverResponse";
-import { TmdbMovie } from "@/interfaces/movies/TmdbMovie";
-import { MoviesApiConfiguration } from "@/interfaces/movies/MoviesApiConfiguration";
+import { TmdbConfiguration } from "@/interfaces/tmdb/TmdbConfiguration";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
+import { MoviesApiDiscoverResponse } from "@/interfaces/tmdb/TmdbDiscoverResponse";
+import { TmdbGenreDetails } from "@/interfaces/tmdb/TmdbGenreDetails";
+import { TmdbImageSize } from "@/interfaces/tmdb/TmdbImageSize";
+import { TmdbMovieCredits } from "@/interfaces/tmdb/TmdbMovieCredits";
 import ApiClient from "@/utils/api-client/apiClient";
 import { Result, err, ok } from "neverthrow";
-import { TmdbMovieCredits } from "@/interfaces/movies/TmdbMovieCredits";
 
-export class MovieApiClient {
+export class TmdbApiClient {
   private apiKey = process.env.TMDB_API_KEY;
   private apiBaseUrl = "https://api.themoviedb.org";
   private apiVersion = 3;
   private apiResultsLanguage = "en-US";
   private movieApiClient: IApiClient = new ApiClient({});
-  private moviesApiConfiguration: MoviesApiConfiguration | null = null;
-  private allGenresDetails: GenreDetails[] | null = null;
+  private moviesApiConfiguration: TmdbConfiguration | null = null;
+  private allGenresDetails: TmdbGenreDetails[] | null = null;
 
   constructor() {
-    this.setMoviesApiConfiguration();
+    this.setTmdbConfiguration();
     this.setAllGenresDetails();
   }
 
-  private getMoviesApiConfiguration = async (): Promise<
-    Result<MoviesApiConfiguration, ApiError>
+  private getTmdbConfiguration = async (): Promise<
+    Result<TmdbConfiguration, ApiError>
   > => {
     if (this.moviesApiConfiguration) return ok(this.moviesApiConfiguration);
 
-    const result = await this.movieApiClient.get<MoviesApiConfiguration>(
+    const result = await this.movieApiClient.get<TmdbConfiguration>(
       `${this.apiBaseUrl}/${this.apiVersion}/configuration?api_key=${this.apiKey}`
     );
 
@@ -42,8 +42,8 @@ export class MovieApiClient {
     return ok(result.value);
   };
 
-  private async setMoviesApiConfiguration(): Promise<void> {
-    const configuration = await this.getMoviesApiConfiguration();
+  private async setTmdbConfiguration(): Promise<void> {
+    const configuration = await this.getTmdbConfiguration();
 
     if (configuration.isOk()) {
       this.moviesApiConfiguration = configuration.value;
@@ -51,11 +51,13 @@ export class MovieApiClient {
   }
 
   private getAllGenresDetails = async (): Promise<
-    Result<GenreDetails[], ApiError>
+    Result<TmdbGenreDetails[], ApiError>
   > => {
     if (this.allGenresDetails) return ok(this.allGenresDetails);
 
-    const result = await this.movieApiClient.get<{ genres: GenreDetails[] }>(
+    const result = await this.movieApiClient.get<{
+      genres: TmdbGenreDetails[];
+    }>(
       `${this.apiBaseUrl}/${this.apiVersion}/genre/movie/list?api_key=${this.apiKey}`
     );
 
@@ -79,11 +81,11 @@ export class MovieApiClient {
 
   async getRandomMovies(
     count: number = 20,
-    config: { withImages: boolean; imageSize: ImageSize } = {
+    config: { withImages: boolean; imageSize: TmdbImageSize } = {
       withImages: true,
-      imageSize: ImageSize.md,
+      imageSize: TmdbImageSize.md,
     }
-  ): Promise<Result<TmdbMovie[], ApiError>> {
+  ): Promise<Result<TmdbDemoMovie[], ApiError>> {
     const result = await this.movieApiClient.get<MoviesApiDiscoverResponse>(
       `${this.apiBaseUrl}/${this.apiVersion}/discover/movie?api_key=${this.apiKey}&language=${this.apiResultsLanguage}&page=1`
     );
@@ -126,7 +128,9 @@ export class MovieApiClient {
     return ok(movies.slice(0, count));
   }
 
-  private filterOutMoviesWithoutImage(movies: TmdbMovie[]): TmdbMovie[] {
+  private filterOutMoviesWithoutImage(
+    movies: TmdbDemoMovie[]
+  ): TmdbDemoMovie[] {
     const moviesWithImages = movies.filter(
       (movie) => movie.backdrop_path && movie.poster_path
     );
@@ -135,10 +139,10 @@ export class MovieApiClient {
   }
 
   private async mapCompleteImagePaths(
-    movies: TmdbMovie[],
-    imageSize: ImageSize
-  ): Promise<Result<TmdbMovie[], ApiError>> {
-    const configuration = await this.getMoviesApiConfiguration();
+    movies: TmdbDemoMovie[],
+    imageSize: TmdbImageSize
+  ): Promise<Result<TmdbDemoMovie[], ApiError>> {
+    const configuration = await this.getTmdbConfiguration();
 
     if (configuration.isErr()) {
       return err(configuration.error);
@@ -158,7 +162,7 @@ export class MovieApiClient {
     }
 
     // Let's go
-    const updatedMovies: TmdbMovie[] = [];
+    const updatedMovies: TmdbDemoMovie[] = [];
 
     for (const movie of movies) {
       if (movie.backdrop_path) {
@@ -173,10 +177,10 @@ export class MovieApiClient {
     return ok(updatedMovies);
   }
 
-  private getGenreDetailsById(
-    allGenresDetails: GenreDetails[],
+  private getTmdbGenreDetailsById(
+    allGenresDetails: TmdbGenreDetails[],
     genreId: number
-  ): GenreDetails | null {
+  ): TmdbGenreDetails | null {
     const result = allGenresDetails.find(({ id }) => id === genreId);
 
     if (result) {
@@ -191,21 +195,21 @@ export class MovieApiClient {
   }
 
   private async mapGenresDetailsToMovies(
-    movies: TmdbMovie[]
-  ): Promise<Result<TmdbMovie[], ApiError>> {
+    movies: TmdbDemoMovie[]
+  ): Promise<Result<TmdbDemoMovie[], ApiError>> {
     const allGenresDetails = await this.getAllGenresDetails();
 
     if (allGenresDetails.isErr()) {
       return err(allGenresDetails.error);
     }
 
-    const updatedMovies: TmdbMovie[] = [];
+    const updatedMovies: TmdbDemoMovie[] = [];
 
     // Let's go
     for (const movie of movies) {
-      const genres: GenreDetails[] = [];
+      const genres: TmdbGenreDetails[] = [];
       for (const genreId of movie.genre_ids) {
-        const genreDetails = this.getGenreDetailsById(
+        const genreDetails = this.getTmdbGenreDetailsById(
           allGenresDetails.value,
           genreId
         );
@@ -238,9 +242,9 @@ export class MovieApiClient {
   }
 
   private async mapDirectorsToMovies(
-    movies: TmdbMovie[]
-  ): Promise<Result<TmdbMovie[], ApiError>> {
-    const updatedMovies: TmdbMovie[] = [];
+    movies: TmdbDemoMovie[]
+  ): Promise<Result<TmdbDemoMovie[], ApiError>> {
+    const updatedMovies: TmdbDemoMovie[] = [];
 
     for (const movie of movies) {
       const movieCreditsResult = await this.getMovieCredits(movie.id);
@@ -257,11 +261,7 @@ export class MovieApiClient {
       );
 
       if (director) {
-        movie.director = {
-          tmdbId: director.id,
-          name: director.name,
-          tmdbCreditId: director.credit_id,
-        };
+        movie.director = director;
       }
 
       updatedMovies.push(movie);

@@ -1,6 +1,7 @@
-import { GenreDetails } from "./GenreDetails";
+import { TmdbGenreDetails } from "./TmdbGenreDetails";
+import { CrewMember } from "./TmdbMovieCredits";
 
-export interface TmdbMovie {
+export interface TmdbDemoMovie {
   id: number;
   title: string;
   overview: string;
@@ -34,12 +35,7 @@ export interface TmdbMovie {
    * and search for genre_ids for this movie
    * to generate "genres" which contains id, string of genre (list)
    */
-  genres?: GenreDetails[];
-
-  director?: {
-    tmdbId: number;
-    name: string;
-    tmdbCreditId: string;
-  };
+  genres?: TmdbGenreDetails[];
+  director?: CrewMember;
   // other data we don't care about
 }

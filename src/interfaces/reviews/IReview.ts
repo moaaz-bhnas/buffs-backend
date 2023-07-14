@@ -1,5 +1,4 @@
 import { IMovie } from "../movies/IMovie";
-import { IUser } from "../user/IUser";
 
 export interface IReview {
   username: string;

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import request from "supertest";
 import app from "../../server";
 import UserSeeder from "@/seeders/usersSeeder";
-import UserModel from "@/models/UserModel";
+import UserModel from "@/schemas/UserSchema";
 
 const userSeeder = new UserSeeder();
 
