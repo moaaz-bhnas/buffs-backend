@@ -9,6 +9,15 @@ class ReviewsController {
   // todo: set logger
 
   /**
+   * @desc      Gets all users
+   * @route     GET /api/v1/users
+   * @access    Public
+   */
+  async getReviews(req: Request, res: Response, next: NextFunction) {
+    return res.status(200).json(res.advancedResults);
+  }
+
+  /**
    * @desc      Creates a review in the database
    * @route     POST /api/v1/reviews
    * @access    Private: only authenticated users
