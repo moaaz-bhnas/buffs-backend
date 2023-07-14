@@ -1,7 +1,8 @@
 import { IReview } from "@/interfaces/reviews/IReview";
 import { Schema, model } from "mongoose";
+import { MovieSchema } from "./MovieScehma";
 
-const ReviewSchema = new Schema<IReview>(
+export const ReviewSchema = new Schema<IReview>(
   {
     username: {
       type: String,
@@ -18,42 +19,7 @@ const ReviewSchema = new Schema<IReview>(
         required: [true, "Please add an avatar"],
       },
     },
-    movieDetails: {
-      tmdbId: {
-        type: String,
-        required: [true, "Please add the tmdbId"],
-      },
-      title: {
-        type: String,
-        required: [true, "Please add a title"],
-      },
-      posterPath: {
-        type: String,
-        required: [true, "Please add a poster path"],
-      },
-      releaseDate: {
-        type: String,
-        required: [true, "Please add a release date"],
-      },
-      genres: {
-        type: [String],
-        required: [true, "Please add genres"],
-      },
-      summary: {
-        type: String,
-        required: [true, "Please add a summary"],
-      },
-      tmdbRating: {
-        type: Number,
-        required: [true, "Please add the tmdb rating"],
-      },
-      director: {
-        tmdbId: Number,
-        name: String,
-        tmdbCreditId: String,
-        default: null,
-      },
-    },
+    movieDetails: MovieSchema,
     rating: {
       type: Number,
       required: [true, "Please add a rating"],

@@ -1,3 +1,5 @@
+import { IDirector } from "./IDirector";
+
 export interface IMovie {
   tmdbId: number;
   title: string;
@@ -6,9 +8,5 @@ export interface IMovie {
   genres: string[];
   summary: string;
   tmdbRating: number;
-  director?: {
-    tmdbId: number;
-    name: string;
-    tmdbCreditId: string;
-  };
+  director?: IDirector;
 }

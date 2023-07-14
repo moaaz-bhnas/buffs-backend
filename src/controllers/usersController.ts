@@ -1,4 +1,4 @@
-import UserModel from "@/models/UserModel";
+import UserModel from "@/schemas/UserSchema";
 import ErrorResponse from "@/utils/errorResponse";
 import { NextFunction, Request, Response } from "express";
 

@@ -1,7 +1,7 @@
 import { CreateReviewRequestBody } from "@/interfaces/reviews/CreateReviewRequestBody";
 import { RegisteringReview } from "@/interfaces/reviews/RegisteringReview";
 import { HttpStatusCode } from "@/interfaces/http-status-codes/HttpStatusCode";
-import ReviewModel from "@/models/ReviewModel";
+import ReviewModel from "@/schemas/ReviewSchema";
 import ErrorResponse from "@/utils/errorResponse";
 import { NextFunction, Request, Response } from "express";
 

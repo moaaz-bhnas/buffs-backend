@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import User from "@/models/UserModel";
+import User from "@/schemas/UserSchema";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
 import { UserRole } from "@/interfaces/user/UserRole";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";

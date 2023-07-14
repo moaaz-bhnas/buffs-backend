@@ -1,8 +1,8 @@
-import { TmdbMovie } from "./TmdbMovie";
+import { TmdbDemoMovie } from "./TmdbDemoMovie";
 
 export interface MoviesApiDiscoverResponse {
   page: number;
-  results: TmdbMovie[];
+  results: TmdbDemoMovie[];
   total_results: number;
   total_pages: number;
 }

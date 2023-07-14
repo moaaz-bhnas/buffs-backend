@@ -2,7 +2,7 @@ import mocha from "mocha";
 import { expect } from "chai";
 import request from "supertest";
 import app from "@/server";
-import UserModel from "@/models/UserModel";
+import UserModel from "@/schemas/UserSchema";
 import UserSeeder from "@/seeders/usersSeeder";
 import { faker } from "@faker-js/faker";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";

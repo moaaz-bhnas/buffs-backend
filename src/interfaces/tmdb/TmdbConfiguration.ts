@@ -1,4 +1,4 @@
-export interface MoviesApiConfiguration {
+export interface TmdbConfiguration {
   images: {
     secure_base_url: string;
     backdrop_sizes: string[];

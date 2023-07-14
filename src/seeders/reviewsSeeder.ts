@@ -1,10 +1,10 @@
-import { MovieApiClient } from "@/apis/movies-api-client";
-import { TmdbMovie } from "@/interfaces/movies/TmdbMovie";
+import { TmdbApiClient } from "@/apis/tmdb-api-client";
 import { IReview } from "@/interfaces/reviews/IReview";
 import { ISeeder } from "@/interfaces/seeder/Seeder";
+import { TmdbDemoMovie } from "@/interfaces/tmdb/TmdbDemoMovie";
 import { IUser } from "@/interfaces/user/IUser";
-import ReviewModel from "@/models/ReviewModel";
-import UserModel from "@/models/UserModel";
+import ReviewModel from "@/schemas/ReviewSchema";
+import UserModel from "@/schemas/UserSchema";
 import { faker } from "@faker-js/faker";
 
 interface UserReview {
@@ -47,7 +47,7 @@ class ReviewsSeeder implements ISeeder {
   generateReview(
     user: IUser,
     friends: IUser[],
-    movie: TmdbMovie,
+    movie: TmdbDemoMovie,
     userReview: UserReview
   ): IReview {
     const friendsUsernames = friends.map((friend) => friend.username);
@@ -66,11 +66,6 @@ class ReviewsSeeder implements ISeeder {
         genres: movie.genres?.map((genre) => genre.name) || [],
         summary: movie.overview,
         tmdbRating: movie.vote_average,
-        director: {
-          tmdbId: movie.director?.tmdbId || 0,
-          name: movie.director?.name || "",
-          tmdbCreditId: movie.director?.tmdbCreditId || "",
-        },
       },
       rating: userReview.rating,
       review: userReview.text,
@@ -79,6 +74,14 @@ class ReviewsSeeder implements ISeeder {
       sharers: friendsUsernames,
       comments: [],
     };
+
+    if (movie.director) {
+      review.movieDetails.director = {
+        tmdbId: movie.director.id,
+        name: movie.director.name,
+        tmdbCreditId: movie.director.credit_id,
+      };
+    }
 
     return review;
   }
@@ -92,8 +95,8 @@ class ReviewsSeeder implements ISeeder {
     }
 
     // 2. Get random movies
-    const movieApiClient = new MovieApiClient();
-    const randomMoviesResult = await movieApiClient.getRandomMovies(count);
+    const tmdbApiClient = new TmdbApiClient();
+    const randomMoviesResult = await tmdbApiClient.getRandomMovies(count);
 
     if (randomMoviesResult.isErr()) {
       throw new Error(`Failed to get random ${count} movies.`);

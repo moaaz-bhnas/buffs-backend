@@ -1,6 +1,6 @@
 import { Router } from "express";
 import advancedResults from "@/middlewares/advancedResults";
-import UserModel from "@/models/UserModel";
+import UserModel from "@/schemas/UserSchema";
 import usersController from "@/controllers/usersController";
 
 const usersRouter = Router();

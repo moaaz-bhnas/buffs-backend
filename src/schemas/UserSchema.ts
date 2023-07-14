@@ -9,7 +9,7 @@ import emailValidationRegex from "@/utils/regex/emailValidationRegex";
 
 export interface IUserModel extends Model<IUser, {}, IUserMethods> {}
 
-const UserSchema = new Schema<IUser, IUserModel>(
+export const UserSchema = new Schema<IUser, IUserModel>(
   {
     username: {
       type: String,
