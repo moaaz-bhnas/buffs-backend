@@ -52,4 +52,8 @@ export const ReviewSchema = new Schema<IReview>(
 
 const ReviewModel = model<IReview>("Review", ReviewSchema);
 
+ReviewModel.watch([], { fullDocument: "updateLookup" }).on("change", (data) =>
+  console.log({ data })
+);
+
 export default ReviewModel;

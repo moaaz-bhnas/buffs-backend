@@ -1,11 +1,5 @@
 import express, { Application } from "express";
-import connectDB from "./db";
 import cookieParser from "cookie-parser";
-import authRouter from "./routes/authRouter";
-import usersRouter from "@/routes/usersRouter";
-// import bootcamps from "./routes/bootcamps";
-// import courses from "./routes/courses";
-import errorHandler from "./middlewares/errorHandler";
 import path from "path";
 import expressMongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
@@ -13,6 +7,11 @@ import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
 import cors, { CorsOptions } from "cors";
+import { Server } from "socket.io";
+import connectDB from "@/db";
+import authRouter from "@/routes/authRouter";
+import usersRouter from "@/routes/usersRouter";
+import errorHandler from "@/middlewares/errorHandler";
 import reviewsRouter from "./routes/reviewsRouter";
 
 // connect to database
@@ -83,6 +82,16 @@ const server = app.listen(PORT, function () {
   console.log(
     `App listening in ${process.env.NODE_ENV} mode on http://localhost:${PORT} 🚀`
   );
+});
+
+// socket.io
+// Read here to understand the ping-pong mechanism between client/server
+// https://socket.io/docs/v4/how-it-works/#disconnection-detection
+export const io = new Server(server, { pingTimeout: 60000 });
+
+// socket here kinda represents the client
+io.on("connection", function (socket) {
+  console.log("Connected to socket.io ⚡");
 });
 
 // handle unhandled promise rejections
