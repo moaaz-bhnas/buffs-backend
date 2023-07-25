@@ -57,7 +57,7 @@ app.use(hpp());
 // Enable CORS
 const corsOptions: CorsOptions = {
   origin: [
-    "http://localhost:3000",
+    process.env.BUFFS_URL,
     "http://127.0.0.1",
     // your origins here
   ],
@@ -87,11 +87,19 @@ const server = app.listen(PORT, function () {
 // socket.io
 // Read here to understand the ping-pong mechanism between client/server
 // https://socket.io/docs/v4/how-it-works/#disconnection-detection
-export const io = new Server(server, { pingTimeout: 60000 });
+export const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.BUFFS_URL,
+  },
+});
 
 // socket here kinda represents the client
 io.on("connection", function (socket) {
   console.log("Connected to socket.io ⚡");
+
+  // send a message to the client
+  socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
 });
 
 // handle unhandled promise rejections
