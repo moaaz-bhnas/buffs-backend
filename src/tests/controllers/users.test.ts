@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import request from "supertest";
-import app from "../../server";
+import app from "../../app";
 import UserSeeder from "@/seeders/usersSeeder";
 import UserModel from "@/schemas/UserSchema";
 
