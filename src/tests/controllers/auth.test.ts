@@ -6,6 +6,7 @@ import UserModel from "@/schemas/UserSchema";
 import UserSeeder from "@/seeders/usersSeeder";
 import { faker } from "@faker-js/faker";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
+import connectDB from "@/db";
 
 const userSeeder = new UserSeeder();
 
@@ -16,6 +17,10 @@ async function addUserToDB(user: RegisteringUser) {
 async function removeUserFromDB(username: string) {
   await UserModel.deleteOne({ username });
 }
+
+before(async () => {
+  await connectDB();
+});
 
 // @desc      Register user
 describe("POST /api/v1/auth/register", () => {

@@ -3,8 +3,13 @@ import request from "supertest";
 import app from "../../app";
 import UserSeeder from "@/seeders/usersSeeder";
 import UserModel from "@/schemas/UserSchema";
+import connectDB from "@/db";
 
 const userSeeder = new UserSeeder();
+
+before(async () => {
+  await connectDB();
+});
 
 // @desc      Get all Users
 describe("GET /api/v1/users", () => {
