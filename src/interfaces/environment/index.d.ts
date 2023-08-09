@@ -11,6 +11,7 @@ declare global {
       JWT_SECRET: string;
       JWT_EXPIRE: string;
       JWT_COOKIE_EXPIRE: string;
+      BUFFS_URL: string;
     }
   }
 }
