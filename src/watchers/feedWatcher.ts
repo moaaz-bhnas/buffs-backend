@@ -8,11 +8,15 @@ export default async function feedWatcher(io: Server) {
   changeStream.on("change", (event) => {
     switch (event.operationType) {
       case "insert":
-        io.emit(SocketEvent.REVIEW_CREATED, event.fullDocument);
+        io
+          // .to(SocketEvent.SUBSCRIBED_TO_FEED)
+          .emit(SocketEvent.REVIEW_CREATED, event.fullDocument);
         break;
 
       case "update":
-        io.emit(SocketEvent.REVIEW_UPDATED, event.fullDocument);
+        io
+          // .to(SocketEvent.SUBSCRIBED_TO_FEED)
+          .emit(SocketEvent.REVIEW_UPDATED, event.fullDocument);
         break;
     }
   });
