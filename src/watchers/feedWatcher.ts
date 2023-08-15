@@ -1,4 +1,5 @@
 import { SocketEvent } from "@/interfaces/socket/SocketEvent";
+import { SocketRoom } from "@/interfaces/socket/SocketRoom";
 import ReviewModel from "@/schemas/ReviewSchema";
 import { Server } from "socket.io";
 
@@ -8,15 +9,17 @@ export default async function feedWatcher(io: Server) {
   changeStream.on("change", (event) => {
     switch (event.operationType) {
       case "insert":
-        io
-          // .to(SocketEvent.SUBSCRIBED_TO_FEED)
-          .emit(SocketEvent.REVIEW_CREATED, event.fullDocument);
+        io.to(SocketRoom.FEED).emit(
+          SocketEvent.REVIEW_CREATED,
+          event.fullDocument
+        );
         break;
 
       case "update":
-        io
-          // .to(SocketEvent.SUBSCRIBED_TO_FEED)
-          .emit(SocketEvent.REVIEW_UPDATED, event.fullDocument);
+        io.to(SocketRoom.FEED).emit(
+          SocketEvent.REVIEW_UPDATED,
+          event.fullDocument
+        );
         break;
     }
   });
