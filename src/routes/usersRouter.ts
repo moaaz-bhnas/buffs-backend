@@ -14,4 +14,8 @@ usersRouter.route("/:userId").get(usersController.getUser);
 
 usersRouter.route("/:userId/follow").put(protect, usersController.followUser);
 
+usersRouter
+  .route("/:userId/unfollow")
+  .put(protect, usersController.unfollowUser);
+
 export default usersRouter;
