@@ -15,29 +15,29 @@ interface UserReview {
 class ReviewsSeeder implements ISeeder {
   private count: number;
   private randomReviews = [
-    { rating: 8.5, text: "Great movie, highly recommended!" },
-    { rating: 9.2, text: "One of the best movies I've seen!" },
-    { rating: 7.9, text: "Solid film, worth watching." },
-    { rating: 6.5, text: "Decent movie, but nothing special." },
-    { rating: 8.8, text: "Incredible performance by the lead actor." },
-    { rating: 7.2, text: "Good movie, enjoyed it." },
-    { rating: 9.7, text: "A masterpiece! Must-watch!" },
-    { rating: 5.6, text: "Not my cup of tea, didn't like it." },
-    { rating: 8.1, text: "Engaging storyline, kept me hooked." },
-    { rating: 6.9, text: "Average movie, had its moments." },
-    { rating: 7.8, text: "Well-directed with stunning visuals." },
-    { rating: 9.5, text: "Absolutely loved it, a must-see!" },
-    { rating: 6.3, text: "Fairly entertaining, but forgettable." },
+    { rating: 8, text: "Great movie, highly recommended!" },
+    { rating: 9, text: "One of the best movies I've seen!" },
+    { rating: 7, text: "Solid film, worth watching." },
+    { rating: 6, text: "Decent movie, but nothing special." },
+    { rating: 8, text: "Incredible performance by the lead actor." },
+    { rating: 7, text: "Good movie, enjoyed it." },
+    { rating: 9, text: "A masterpiece! Must-watch!" },
+    { rating: 5, text: "Not my cup of tea, didn't like it." },
+    { rating: 8, text: "Engaging storyline, kept me hooked." },
+    { rating: 6, text: "Average movie, had its moments." },
+    { rating: 7, text: "Well-directed with stunning visuals." },
+    { rating: 9, text: "Absolutely loved it, a must-see!" },
+    { rating: 6, text: "Fairly entertaining, but forgettable." },
     {
-      rating: 8.6,
+      rating: 8,
       text: "Captivating plot, couldn't take my eyes off the screen.",
     },
-    { rating: 7.1, text: "Decent performances, but lacked depth." },
-    { rating: 9.3, text: "Brilliant film, left me speechless." },
-    { rating: 8.0, text: "Solid movie, would recommend it." },
-    { rating: 7.4, text: "Enjoyable flick, good for a casual watch." },
-    { rating: 7.7, text: "Well-paced and engaging." },
-    { rating: 8.9, text: "Impressive cinematography, visually stunning." },
+    { rating: 7, text: "Decent performances, but lacked depth." },
+    { rating: 9, text: "Brilliant film, left me speechless." },
+    { rating: 8, text: "Solid movie, would recommend it." },
+    { rating: 7, text: "Enjoyable flick, good for a casual watch." },
+    { rating: 7, text: "Well-paced and engaging." },
+    { rating: 8, text: "Impressive cinematography, visually stunning." },
   ];
 
   constructor(count = 20) {
@@ -53,7 +53,7 @@ class ReviewsSeeder implements ISeeder {
     const friendsUsernames = friends.map((friend) => friend.username);
 
     const review: IReview = {
-      username: user.username,
+      userId: user._id,
       userDetails: {
         displayName: user.displayName,
         avatar: user.avatar || "",

@@ -4,9 +4,9 @@ import { MovieSchema } from "./MovieScehma";
 
 export const ReviewSchema = new Schema<IReview>(
   {
-    username: {
-      type: String,
-      required: [true, "Please add a username"],
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: [true, "Please add a user ID"],
       ref: "User",
     },
     userDetails: {

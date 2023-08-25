@@ -1,7 +1,8 @@
+import { Types } from "mongoose";
 import { IMovie } from "../movies/IMovie";
 
 export interface RegisteringReview {
-  username: string;
+  userId: Types.ObjectId;
   userDetails: {
     displayName: string;
     avatar: string;

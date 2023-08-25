@@ -38,7 +38,7 @@ class ReviewsController {
     // 1. Collect review data
     const reveiwData: RegisteringReview = {
       ...req.body,
-      username: req.user.username,
+      userId: req.user._id,
       userDetails: {
         displayName: req.user.displayName,
         avatar: req.user.avatar,

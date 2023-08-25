@@ -1,4 +1,4 @@
-import { Model, model, Schema, Types } from "mongoose";
+import { Model, model, Schema } from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import gravatar from "gravatar";
@@ -38,12 +38,12 @@ export const UserSchema = new Schema<IUser, IUserModel>(
       select: false,
     },
     following: {
-      type: [Types.ObjectId],
+      type: [Schema.Types.ObjectId],
       default: [],
       ref: "User",
     },
     followers: {
-      type: [Types.ObjectId],
+      type: [Schema.Types.ObjectId],
       default: [],
       ref: "User",
     },
