@@ -1,4 +1,4 @@
-import { Model, model, Schema } from "mongoose";
+import { Model, model, Schema, Types } from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import gravatar from "gravatar";
@@ -36,6 +36,16 @@ export const UserSchema = new Schema<IUser, IUserModel>(
       required: [true, "Please add a password"],
       minlength: 6,
       select: false,
+    },
+    following: {
+      type: [Types.ObjectId],
+      default: [],
+      ref: "User",
+    },
+    followers: {
+      type: [Types.ObjectId],
+      default: [],
+      ref: "User",
     },
     avatar: String,
     resetPasswordToken: String,
