@@ -40,6 +40,7 @@ class ReviewsController {
       ...req.body,
       userId: req.user._id,
       userDetails: {
+        username: req.user.username,
         displayName: req.user.displayName,
         avatar: req.user.avatar,
       },

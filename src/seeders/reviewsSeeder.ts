@@ -55,6 +55,7 @@ class ReviewsSeeder implements ISeeder {
     const review: IReview = {
       userId: user._id,
       userDetails: {
+        username: user.username,
         displayName: user.displayName,
         avatar: user.avatar || "",
       },

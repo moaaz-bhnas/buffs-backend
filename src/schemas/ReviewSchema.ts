@@ -10,6 +10,10 @@ export const ReviewSchema = new Schema<IReview>(
       ref: "User",
     },
     userDetails: {
+      username: {
+        type: String,
+        required: [true, "Please add a username"],
+      },
       displayName: {
         type: String,
         required: [true, "Please add a username"],

@@ -4,6 +4,7 @@ import { IMovie } from "../movies/IMovie";
 export interface IReview {
   userId: Types.ObjectId;
   userDetails: {
+    username: string;
     displayName: string;
     avatar: string;
   };
