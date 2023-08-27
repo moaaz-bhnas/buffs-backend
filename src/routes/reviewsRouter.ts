@@ -12,4 +12,6 @@ reviewsRouter
 
 reviewsRouter.route("/").post(protect, reviewsController.createReview);
 
+reviewsRouter.route("/:reviewId").put(protect, reviewsController.updateReview);
+
 export default reviewsRouter;
