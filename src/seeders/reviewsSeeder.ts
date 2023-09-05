@@ -74,6 +74,7 @@ class ReviewsSeeder implements ISeeder {
       savers: friendsUsernames,
       sharers: friendsUsernames,
       comments: [],
+      isDeleted: false,
     };
 
     if (movie.director) {
