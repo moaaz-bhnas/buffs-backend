@@ -27,4 +27,8 @@ export interface IReview {
    * TODO: needs to be updated with the comment schema
    */
   comments: any[];
+  /**
+   * A flag to indicate whether the review author has deleted the review
+   */
+  isDeleted: boolean;
 }

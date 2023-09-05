@@ -2,7 +2,7 @@ import { Router } from "express";
 import advancedResults from "@/middlewares/advancedResults";
 import UserModel from "@/schemas/UserSchema";
 import usersController from "@/controllers/usersController";
-import { protect } from "@/middlewares/auth";
+import { protect } from "@/middlewares/protect";
 
 const usersRouter = Router();
 

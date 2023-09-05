@@ -101,6 +101,53 @@ class ReviewsController {
       next(error);
     }
   }
+
+  /**
+   * @desc      Flags a review as deleted (soft deletion)
+   * @route     DELETE /api/v1/reviews/:reviewId
+   * @access    Private: only authenticated users
+   */
+  async deleteReview(req: Request, res: Response, next: NextFunction) {
+    // 1. check token validation
+    if (!req.user) {
+      const error = new ErrorResponse({
+        message: `User is not authorized to access this route.`,
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+      });
+      return next(error);
+    }
+
+    // 2. check whether the review exists
+    const review = await ReviewModel.findById(req.params.reviewId);
+    if (!review) {
+      const error = new ErrorResponse({
+        message: `Review with ID: ${req.params.reviewId} doesn't exist.`,
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+      return next(error);
+    }
+
+    // 3. check whether the user is the author
+    const isAuthor = review.userId.equals(req.user._id);
+    if (!isAuthor) {
+      const error = new ErrorResponse({
+        message: `User with ID: ${req.user._id} in not the author of the the review with ID: ${req.params.reviewId}.`,
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+      });
+      return next(error);
+    }
+
+    try {
+      const review = await ReviewModel.findByIdAndUpdate(
+        req.params.reviewId,
+        { $set: { isDeleted: true } },
+        { returnDocument: "after" }
+      );
+      res.status(HttpStatusCode.OK).json({ success: true, data: review });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 const reviewsController = new ReviewsController();

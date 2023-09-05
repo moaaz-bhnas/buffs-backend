@@ -63,16 +63,3 @@ export const protect = asyncHandler(async function (
     return next(error);
   }
 });
-
-export function authorize(...roles: string[]) {
-  return function (req: Request, res: Response, next: NextFunction) {
-    if (req.user && !roles.includes(req.user.role)) {
-      const error = new ErrorResponse({
-        message: `User role "${req.user.role}" not authorized to access this route`,
-        statusCode: 403,
-      });
-      return next(error);
-    }
-    next();
-  };
-}

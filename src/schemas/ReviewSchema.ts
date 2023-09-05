@@ -48,6 +48,11 @@ export const ReviewSchema = new Schema<IReview>(
       type: Schema.Types.Mixed,
       default: [],
     },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
