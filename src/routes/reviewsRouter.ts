@@ -18,4 +18,12 @@ reviewsRouter
   .route("/:reviewId")
   .delete(protect, reviewsController.deleteReview);
 
+reviewsRouter
+  .route("/:reviewId/like")
+  .put(protect, reviewsController.likeReview);
+
+reviewsRouter
+  .route("/:reviewId/unlike")
+  .put(protect, reviewsController.unlikeReview);
+
 export default reviewsRouter;
