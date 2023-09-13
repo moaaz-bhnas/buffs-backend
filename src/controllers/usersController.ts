@@ -2,6 +2,7 @@ import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
 import UserModel from "@/schemas/UserSchema";
 import ErrorResponse from "@/utils/errorResponse";
 import { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
 
 class UsersController {
   // todo: set logger
@@ -57,6 +58,7 @@ class UsersController {
       );
     }
 
+    const session = await mongoose.startSession();
     try {
       // 1. Check whether user exists
       const userToFollow = await UserModel.findById(req.params.userId);
@@ -78,6 +80,9 @@ class UsersController {
         return next(error);
       }
 
+      // Start transaction
+      session.startTransaction();
+
       // 3. update both users
       await UserModel.findByIdAndUpdate(userToFollow._id, {
         $addToSet: { followers: req.user._id },
@@ -87,10 +92,17 @@ class UsersController {
         { $addToSet: { following: userToFollow._id } },
         { returnDocument: "after" }
       );
+
+      // finish transcation
+      await session.commitTransaction();
+      session.endSession();
+
       res
         .status(HttpStatusCode.OK)
         .json({ success: true, data: followingUser });
     } catch (error) {
+      await session.abortTransaction();
+      await session.endSession();
       next(error);
     }
   }
@@ -110,6 +122,7 @@ class UsersController {
       );
     }
 
+    const session = await mongoose.startSession();
     try {
       // 1. Check whether user exists
       const userToUnfollow = await UserModel.findById(req.params.userId);
@@ -131,6 +144,9 @@ class UsersController {
         return next(error);
       }
 
+      // Start transaction
+      session.startTransaction();
+
       // 3. update both users
       await UserModel.findByIdAndUpdate(userToUnfollow._id, {
         $pull: { followers: req.user._id },
@@ -140,10 +156,17 @@ class UsersController {
         { $pull: { following: userToUnfollow._id } },
         { returnDocument: "after" }
       );
+
+      // finish transcation
+      await session.commitTransaction();
+      session.endSession();
+
       res
         .status(HttpStatusCode.OK)
         .json({ success: true, data: followingUser });
     } catch (error) {
+      await session.abortTransaction();
+      await session.endSession();
       next(error);
     }
   }
