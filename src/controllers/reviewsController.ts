@@ -170,96 +170,59 @@ class ReviewsController {
     const isLiked = req.user.likes.some((likedReview) =>
       likedReview.equals(req.params.reviewId)
     );
+    const session = await mongoose.startSession();
     if (isLiked) {
-      const error = new ErrorResponse({
-        message: `User with ID: ${req.user._id} already likes review with ID: ${req.params.reviewId}.`,
-        statusCode: HttpStatusCode.CONFLICT,
-      });
-      return next(error);
-    }
+      try {
+        // Start transaction
+        session.startTransaction();
 
-    // 3. update user likes / review likers
-    const session = await mongoose.startSession();
-    try {
-      // Start transaction
-      session.startTransaction();
+        await UserModel.findByIdAndUpdate(req.user._id, {
+          $pull: { likes: req.params.reviewId },
+        });
+        const updatedReview = await ReviewModel.findByIdAndUpdate(
+          req.params.reviewId,
+          { $pull: { likers: req.user._id } },
+          { returnDocument: "after" }
+        );
 
-      await UserModel.findByIdAndUpdate(req.user._id, {
-        $addToSet: { likes: req.params.reviewId },
-      });
-      const updatedReview = await ReviewModel.findByIdAndUpdate(
-        req.params.reviewId,
-        { $addToSet: { likers: req.user._id } },
-        { returnDocument: "after" }
-      );
+        // finish transcation
+        await session.commitTransaction();
+        session.endSession();
 
-      // finish transcation
-      await session.commitTransaction();
-      session.endSession();
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, data: updatedReview });
+      } catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
+        next(error);
+      }
+    } else {
+      try {
+        // Start transaction
+        session.startTransaction();
 
-      res
-        .status(HttpStatusCode.OK)
-        .json({ success: true, data: updatedReview });
-    } catch (error) {
-      await session.abortTransaction();
-      await session.endSession();
-      next(error);
-    }
-  }
+        await UserModel.findByIdAndUpdate(req.user._id, {
+          $addToSet: { likes: req.params.reviewId },
+        });
+        const updatedReview = await ReviewModel.findByIdAndUpdate(
+          req.params.reviewId,
+          { $addToSet: { likers: req.user._id } },
+          { returnDocument: "after" }
+        );
 
-  /**
-   * @desc      Unlikes a review
-   * @route     PUT /api/v1/reviews/:reviewId/unlike
-   * @access    Private: only authenticated users
-   */
-  async unlikeReview(req: Request, res: Response, next: NextFunction) {
-    // 1. check token validation
-    if (!req.user) {
-      const error = new ErrorResponse({
-        message: `User is not authorized to access this route.`,
-        statusCode: HttpStatusCode.UNAUTHORIZED,
-      });
-      return next(error);
-    }
+        // finish transcation
+        await session.commitTransaction();
+        session.endSession();
 
-    // 2. check whether user already liked this review
-    const isLiked = req.user.likes.some((likedReview) =>
-      likedReview.equals(req.params.reviewId)
-    );
-    if (!isLiked) {
-      const error = new ErrorResponse({
-        message: `Review with ID: ${req.params.reviewId} in not user ID: ${req.user._id} list of likes.`,
-        statusCode: HttpStatusCode.CONFLICT,
-      });
-      return next(error);
-    }
-
-    // 3. update user likes / review likers
-    const session = await mongoose.startSession();
-    try {
-      // Start transaction
-      session.startTransaction();
-
-      await UserModel.findByIdAndUpdate(req.user._id, {
-        $pull: { likes: req.params.reviewId },
-      });
-      const updatedReview = await ReviewModel.findByIdAndUpdate(
-        req.params.reviewId,
-        { $pull: { likers: req.user._id } },
-        { returnDocument: "after" }
-      );
-
-      // finish transcation
-      await session.commitTransaction();
-      session.endSession();
-
-      res
-        .status(HttpStatusCode.OK)
-        .json({ success: true, data: updatedReview });
-    } catch (error) {
-      await session.abortTransaction();
-      await session.endSession();
-      next(error);
+        res
+          .status(HttpStatusCode.OK)
+          .json({ success: true, data: updatedReview });
+      } catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
+        next(error);
+      }
     }
   }
 }
