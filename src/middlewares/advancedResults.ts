@@ -20,12 +20,11 @@ export interface Pagination {
   };
 }
 
-function removeReservedParams(
-  query: FormattedQuery,
-  params: string[]
-): FormattedQuery {
+function removeReservedParams(query: FormattedQuery): FormattedQuery {
+  // Fields to exclude
+  const reservedParams = ["select", "sort", "page", "limit"];
   const queryCopy = { ...query };
-  params.forEach((param) => delete queryCopy[param]);
+  reservedParams.forEach((param) => delete queryCopy[param]);
   return queryCopy;
 }
 
@@ -45,11 +44,8 @@ export default function (model: Model<any>) {
     res: Response,
     next: NextFunction
   ) {
-    // Fields to exclude
-    const reservedParams = ["select", "sort", "page", "limit"];
-
     // remove reserved words from query
-    let formattedQuery = removeReservedParams(req.query, reservedParams);
+    let formattedQuery = removeReservedParams(req.query);
 
     // create operators (e.g. $lt, $gt)
     formattedQuery = addDollarSignToOperators(formattedQuery);
@@ -79,7 +75,14 @@ export default function (model: Model<any>) {
     query = query.skip(startIndex).limit(limit);
 
     // executing query
-    const results = await query;
+    // const results = await query;
+
+    let results = [];
+    try {
+      results = await query;
+    } catch (error) {
+      next(error);
+    }
 
     // pagination: next / prev
     const pagination: Pagination = {};
