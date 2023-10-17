@@ -1,5 +1,5 @@
 import { Query } from "@/interfaces/express/Query";
-import QueryFormatter from "@/utils/queryFormatter";
+import getMongoDBFormattedQuery from "@/utils/getMongoDBFormattedQuery";
 import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
 
@@ -16,7 +16,7 @@ export default function (model: Model<any>) {
     res: Response,
     next: NextFunction
   ) {
-    const formattedQuery = QueryFormatter.getMongoDBFormattedQuery(req.query);
+    const formattedQuery = getMongoDBFormattedQuery(req.query);
     console.log("🍎", formattedQuery);
 
     // build query
