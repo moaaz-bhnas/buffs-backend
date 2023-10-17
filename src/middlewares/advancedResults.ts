@@ -1,17 +1,7 @@
+import { Query } from "@/interfaces/express/Query";
+import getMongoDBFormattedQuery from "@/utils/getMongoDBFormattedQuery";
 import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
-
-type Query = {
-  select: string;
-  sort: string;
-  page: string;
-  limit: string;
-};
-
-interface FormattedQuery {
-  [key: string]: any;
-  select: string;
-}
 
 export interface Pagination {
   [key: string]: {
@@ -20,35 +10,13 @@ export interface Pagination {
   };
 }
 
-function removeReservedParams(query: FormattedQuery): FormattedQuery {
-  // Fields to exclude
-  const reservedParams = ["select", "sort", "page", "limit"];
-  const queryCopy = { ...query };
-  reservedParams.forEach((param) => delete queryCopy[param]);
-  return queryCopy;
-}
-
-function addDollarSignToOperators(query: FormattedQuery): FormattedQuery {
-  let queryString = JSON.stringify(query);
-  queryString = queryString.replace(
-    /\b(lt|lte|gt|gte|in)\b/g,
-    (match) => "$" + match
-  );
-  const newQuery = JSON.parse(queryString);
-  return newQuery;
-}
-
 export default function (model: Model<any>) {
   return async function advancedResults(
     req: Request<{}, {}, {}, Query>,
     res: Response,
     next: NextFunction
   ) {
-    // remove reserved words from query
-    let formattedQuery = removeReservedParams(req.query);
-
-    // create operators (e.g. $lt, $gt)
-    formattedQuery = addDollarSignToOperators(formattedQuery);
+    const formattedQuery = getMongoDBFormattedQuery(req.query);
 
     // build query
     let query = model.find(formattedQuery);
@@ -66,8 +34,8 @@ export default function (model: Model<any>) {
     }
 
     // pagination
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 25;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 25;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = await model.countDocuments();
