@@ -5,7 +5,7 @@ import { Server } from "socket.io";
 import { SocketEvent } from "./interfaces/socket/SocketEvent";
 import { SocketRoom } from "./interfaces/socket/SocketRoom";
 
-export default function socketHandler(io: Server) {
+export default function (io: Server) {
   io.on("connection", (socket) => {
     console.log(`A user connected ⚡`);
 
@@ -19,5 +19,9 @@ export default function socketHandler(io: Server) {
       console.log("🍩 A user successfully joined feed room");
       io.to(SocketRoom.FEED).emit("test");
     });
+  });
+
+  io.on("connect_error", (err) => {
+    console.log(`connect_error due to ${err.message}`);
   });
 }
