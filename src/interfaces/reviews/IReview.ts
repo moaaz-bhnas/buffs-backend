@@ -14,19 +14,15 @@ export interface IReview {
   /**
    * Array of usernames who liked the review
    */
-  likers: string[];
+  likers: Types.ObjectId[];
   /**
    * Array of usernames who saved the review
    */
-  savers: string[];
+  savers: Types.ObjectId[];
   /**
    * Array of usernames who shared the review
    */
-  sharers: string[];
-  /**
-   * TODO: needs to be updated with the comment schema
-   */
-  comments: any[];
+  sharers: Types.ObjectId[];
   /**
    * A flag to indicate whether the review author has deleted the review
    */

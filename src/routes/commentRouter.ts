@@ -215,15 +215,15 @@ export default class CommentsRouter {
     }
 
     // 3. check whether user already liked this comment
-    const isLiked = comment.likes.some(
-      (like) => req.user && like.equals(req.user._id)
+    const isLiked = comment.likers.some(
+      (liker) => req.user && liker.equals(req.user._id)
     );
     try {
       const updatedComment = await CommentModel.findByIdAndUpdate(
         req.params.commentId,
         isLiked
-          ? { $pull: { likes: req.user._id } }
-          : { $addToSet: { likes: req.user._id } },
+          ? { $pull: { likers: req.user._id } }
+          : { $addToSet: { likers: req.user._id } },
         { returnDocument: "after" }
       );
       res

@@ -33,19 +33,15 @@ export const ReviewSchema = new Schema<IReview>(
       default: "",
     },
     likers: {
-      type: [String],
+      type: [Schema.Types.ObjectId],
       default: [],
     },
     savers: {
-      type: [String],
+      type: [Schema.Types.ObjectId],
       default: [],
     },
     sharers: {
-      type: [String],
-      default: [],
-    },
-    comments: {
-      type: Schema.Types.Mixed,
+      type: [Schema.Types.ObjectId],
       default: [],
     },
     isDeleted: {

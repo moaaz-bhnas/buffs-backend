@@ -47,11 +47,6 @@ export const UserSchema = new Schema<IUser, IUserModel>(
       default: [],
       ref: "User",
     },
-    likes: {
-      type: [Schema.Types.ObjectId],
-      default: [],
-      ref: "Review",
-    },
     avatar: String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
