@@ -103,14 +103,14 @@ describe("PUT /api/v1/comments/:commentId/like", () => {
       .put(`/api/v1/comments/${comment?._id}/like`)
       .set("Authorization", `Bearer ${token}`);
     expect(likeResponse.statusCode).to.equal(HttpStatusCode.OK);
-    expect(likeResponse.body.data.likes).to.include(authUser?._id);
+    expect(likeResponse.body.data.likers).to.include(authUser?._id);
 
     // unlike
     const unlikeResponse = await request(app)
       .put(`/api/v1/comments/${comment?._id}/like`)
       .set("Authorization", `Bearer ${token}`);
     expect(unlikeResponse.statusCode).to.equal(HttpStatusCode.OK);
-    expect(unlikeResponse.body.data.likes).to.not.include(authUser?._id);
+    expect(unlikeResponse.body.data.likers).to.not.include(authUser?._id);
   });
 
   it("should respond with a (404: NOT_FOUND) status code if comment doesn't exist", async () => {
