@@ -16,7 +16,7 @@ export const ReviewSchema = new Schema<IReview>(
       },
       displayName: {
         type: String,
-        required: [true, "Please add a username"],
+        required: [true, "Please add a display name"],
       },
       avatar: {
         type: String,
@@ -54,9 +54,7 @@ export const ReviewSchema = new Schema<IReview>(
       default: false,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const ReviewModel = model<IReview>("Review", ReviewSchema);

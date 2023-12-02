@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Router } from "express";
 import cookieParser from "cookie-parser";
 import path from "path";
 import expressMongoSanitize from "express-mongo-sanitize";
@@ -7,10 +7,11 @@ import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
 import cors, { CorsOptions } from "cors";
-import authRouter from "@/routes/authRouter";
-import usersRouter from "@/routes/usersRouter";
 import errorHandler from "@/middlewares/errorHandler";
-import reviewsRouter from "./routes/reviewsRouter";
+import ReviewsRouter from "./routes/reviewsRouter";
+import AuthRouter from "./routes/authRouter";
+import UsersRouter from "@/routes/usersRouter";
+import CommentsRouter from "./routes/commentRouter";
 
 const app: Application = express();
 
@@ -64,9 +65,10 @@ app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "public")));
 
 // mount routers
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", usersRouter);
-app.use("/api/v1/reviews", reviewsRouter);
+app.use("/api/v1/auth", AuthRouter.init(Router()));
+app.use("/api/v1/users", UsersRouter.init(Router()));
+app.use("/api/v1/reviews", ReviewsRouter.init(Router()));
+app.use("/api/v1/comments", CommentsRouter.init(Router()));
 
 // error handling
 app.use(errorHandler);
