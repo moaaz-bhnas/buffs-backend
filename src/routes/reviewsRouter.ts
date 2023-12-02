@@ -6,8 +6,6 @@ import { CreateReviewRequestBody } from "@/interfaces/reviews/CreateReviewReques
 import ErrorResponse from "@/utils/errorResponse";
 import { RegisteringReview } from "@/interfaces/reviews/RegisteringReview";
 import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
-import mongoose from "mongoose";
-import UserModel from "@/schemas/UserSchema";
 
 export default class ReviewsRouter {
   // todo: set logger
@@ -194,63 +192,33 @@ export default class ReviewsRouter {
       return next(error);
     }
 
-    // 2. check whether user already liked this review
-    const isLiked = req.user.likes.some((likedReview) =>
-      likedReview.equals(req.params.reviewId)
+    // 2. check whether the review exists
+    const review = await ReviewModel.findById(req.params.reviewId);
+    if (!review) {
+      const error = new ErrorResponse({
+        message: `Review with ID: ${req.params.reviewId} doesn't exist.`,
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+      return next(error);
+    }
+
+    // 3. check whether user already liked this review
+    const isLiked = review.likers.some(
+      (liker) => req.user && liker.equals(req.user._id)
     );
-    const session = await mongoose.startSession();
-    if (isLiked) {
-      try {
-        // Start transaction
-        session.startTransaction();
-
-        await UserModel.findByIdAndUpdate(req.user._id, {
-          $pull: { likes: req.params.reviewId },
-        });
-        const updatedReview = await ReviewModel.findByIdAndUpdate(
-          req.params.reviewId,
-          { $pull: { likers: req.user._id } },
-          { returnDocument: "after" }
-        );
-
-        // finish transcation
-        await session.commitTransaction();
-        session.endSession();
-
-        res
-          .status(HttpStatusCode.OK)
-          .json({ success: true, data: updatedReview });
-      } catch (error) {
-        await session.abortTransaction();
-        await session.endSession();
-        next(error);
-      }
-    } else {
-      try {
-        // Start transaction
-        session.startTransaction();
-
-        await UserModel.findByIdAndUpdate(req.user._id, {
-          $addToSet: { likes: req.params.reviewId },
-        });
-        const updatedReview = await ReviewModel.findByIdAndUpdate(
-          req.params.reviewId,
-          { $addToSet: { likers: req.user._id } },
-          { returnDocument: "after" }
-        );
-
-        // finish transcation
-        await session.commitTransaction();
-        session.endSession();
-
-        res
-          .status(HttpStatusCode.OK)
-          .json({ success: true, data: updatedReview });
-      } catch (error) {
-        await session.abortTransaction();
-        await session.endSession();
-        next(error);
-      }
+    try {
+      const updatedReview = await ReviewModel.findByIdAndUpdate(
+        req.params.reviewId,
+        isLiked
+          ? { $pull: { likers: req.user._id } }
+          : { $addToSet: { likers: req.user._id } },
+        { returnDocument: "after" }
+      );
+      res
+        .status(HttpStatusCode.OK)
+        .json({ success: true, data: updatedReview });
+    } catch (error) {
+      next(error);
     }
   }
 }

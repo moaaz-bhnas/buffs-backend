@@ -22,7 +22,7 @@ export const CommentSchema = new Schema<IComment>(
       required: false,
       default: null,
     },
-    likes: {
+    likers: {
       type: [Schema.Types.ObjectId],
       required: false,
       default: [],

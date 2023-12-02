@@ -52,7 +52,7 @@ export default class ReviewsSeeder implements ISeeder {
     movie: TmdbDemoMovie,
     userReview: UserReview
   ): IReview {
-    const friendsUsernames = friends.map((friend) => friend.username);
+    const friendsIds = friends.map((friend) => friend._id);
 
     const review: IReview = {
       userId: user._id,
@@ -72,10 +72,9 @@ export default class ReviewsSeeder implements ISeeder {
       },
       rating: userReview.rating,
       review: userReview.text,
-      likers: friendsUsernames,
-      savers: friendsUsernames,
-      sharers: friendsUsernames,
-      comments: [],
+      likers: friendsIds,
+      savers: friendsIds,
+      sharers: friendsIds,
       isDeleted: false,
     };
 

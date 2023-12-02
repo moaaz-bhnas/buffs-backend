@@ -9,7 +9,6 @@ export interface IUser {
   role: string;
   following: Types.ObjectId[];
   followers: Types.ObjectId[];
-  likes: Types.ObjectId[];
   /**
    * Created by a Mongoose middleware before save
    */
