@@ -21,7 +21,7 @@ export default class AuthRouter {
     router.post("/login", this.login);
     router.get("/logout", this.logout);
     router.get("/me", protect, this.getMe);
-    router.get("/forgotpassword", this.forgotPassword);
+    router.post("/forgotpassword", this.forgotPassword);
 
     return router;
   }
