@@ -7,6 +7,12 @@ import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 export default class UsersSeeder implements ISeeder {
   private defaultCount = 20;
 
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Seeder shouldn't run on production");
+    }
+  }
+
   generateUser(): RegisteringUser {
     const user: RegisteringUser = {
       username: faker.internet.userName(),

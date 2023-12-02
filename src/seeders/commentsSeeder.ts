@@ -7,8 +7,6 @@ import { faker } from "@faker-js/faker";
 
 export default class CommentsSeeder implements ISeeder {
   private defaultCount = 20;
-
-  //   generateComment()
   private randomComments = [
     "Wow, this movie blew my mind! The plot twists were insane.",
     "I laughed so hard during this film, my cheeks hurt!",
@@ -31,6 +29,12 @@ export default class CommentsSeeder implements ISeeder {
     "I was completely immersed in the world of this movie. So immersive!",
     "I walked out of the theater with a big smile on my face. Pure joy!",
   ];
+
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Seeder shouldn't run on production");
+    }
+  }
 
   async generateComments(count: number): Promise<RegisteringComment[]> {
     // 1. Get users from the database

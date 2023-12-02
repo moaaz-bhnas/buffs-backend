@@ -40,6 +40,12 @@ export default class ReviewsSeeder implements ISeeder {
     { rating: 8, text: "Impressive cinematography, visually stunning." },
   ];
 
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Seeder shouldn't run on production");
+    }
+  }
+
   generateReview(
     user: IUser,
     friends: IUser[],

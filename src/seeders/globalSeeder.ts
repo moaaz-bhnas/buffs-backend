@@ -14,6 +14,12 @@ export default class GlobalSeeder implements ISeeder {
   private reviewsSeeder = new ReviewsSeeder();
   private commentsSeeder = new CommentsSeeder();
 
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Seeder shouldn't run on production");
+    }
+  }
+
   async seed(
     { users, reviews, comments } = { users: 20, reviews: 20, comments: 20 }
   ): Promise<void> {
