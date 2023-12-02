@@ -13,7 +13,7 @@ interface UserReview {
 }
 
 export default class ReviewsSeeder implements ISeeder {
-  private count: number;
+  private defaultCount = 20;
   private randomReviews = [
     { rating: 8, text: "Great movie, highly recommended!" },
     { rating: 9, text: "One of the best movies I've seen!" },
@@ -40,8 +40,10 @@ export default class ReviewsSeeder implements ISeeder {
     { rating: 8, text: "Impressive cinematography, visually stunning." },
   ];
 
-  constructor(count = 20) {
-    this.count = count;
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Seeder shouldn't run on production");
+    }
   }
 
   generateReview(
@@ -88,7 +90,7 @@ export default class ReviewsSeeder implements ISeeder {
     return review;
   }
 
-  async generateReviews(count = this.count): Promise<IReview[]> {
+  async generateReviews(count: number): Promise<IReview[]> {
     // 1. Get users from the database
     const users = await UserModel.find().limit(count);
 
@@ -122,8 +124,8 @@ export default class ReviewsSeeder implements ISeeder {
     return reviews;
   }
 
-  async seed(): Promise<void> {
-    const reviews = await this.generateReviews();
+  async seed(count = this.defaultCount): Promise<void> {
+    const reviews = await this.generateReviews(count);
 
     try {
       await ReviewModel.create(reviews);

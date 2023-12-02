@@ -1,4 +1,4 @@
-import { RegisteringComment } from "@/interfaces/comments/IComment";
+import { IComment, RegisteringComment } from "@/interfaces/comments/IComment";
 import HttpStatusCode from "@/interfaces/http-status-codes/HttpStatusCode";
 import advancedResults from "@/middlewares/advancedResults";
 import { protect } from "@/middlewares/protect";
@@ -98,12 +98,17 @@ export default class CommentsRouter {
     }
 
     // 2. check whether the comment exists
-    const comment = await CommentModel.findById(req.params.commentId);
-    if (!comment) {
-      const error = new ErrorResponse({
-        message: `Comment with ID: ${req.params.commentId} doesn't exist.`,
-        statusCode: HttpStatusCode.NOT_FOUND,
-      });
+    let comment: IComment | null = null;
+    try {
+      comment = await CommentModel.findById(req.params.commentId);
+      if (!comment) {
+        const error = new ErrorResponse({
+          message: `Comment with ID: ${req.params.commentId} doesn't exist.`,
+          statusCode: HttpStatusCode.NOT_FOUND,
+        });
+        return next(error);
+      }
+    } catch (error) {
       return next(error);
     }
 
