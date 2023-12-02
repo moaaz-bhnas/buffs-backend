@@ -15,6 +15,7 @@ export default class CommentsRouter {
     router.post("/", protect, this.createComment);
     router.put("/:commentId", protect, this.updateComment);
     router.delete("/:commentId", protect, this.deleteComment);
+    router.put("/:commentId/like", protect, this.likeComment);
 
     return router;
   }
@@ -174,6 +175,55 @@ export default class CommentsRouter {
         { returnDocument: "after" }
       );
       res.status(HttpStatusCode.OK).json({ success: true, data: comment });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @desc      Likes a comment
+   * @route     PUT /api/v1/comments/:commentId/like
+   * @access    Private: only authenticated users
+   */
+  private static async likeComment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    // 1. check token validation
+    if (!req.user) {
+      const error = new ErrorResponse({
+        message: `User is not authorized to access this route.`,
+        statusCode: HttpStatusCode.UNAUTHORIZED,
+      });
+      return next(error);
+    }
+
+    // 2. check whether the comment exists
+    const comment = await CommentModel.findById(req.params.commentId);
+    if (!comment) {
+      const error = new ErrorResponse({
+        message: `Comment with ID: ${req.params.commentId} doesn't exist.`,
+        statusCode: HttpStatusCode.NOT_FOUND,
+      });
+      return next(error);
+    }
+
+    // 3. check whether user already liked this comment
+    const isLiked = comment.likes.some(
+      (like) => req.user && like.equals(req.user._id)
+    );
+    try {
+      const updatedComment = await CommentModel.findByIdAndUpdate(
+        req.params.commentId,
+        isLiked
+          ? { $pull: { likes: req.user._id } }
+          : { $addToSet: { likes: req.user._id } },
+        { returnDocument: "after" }
+      );
+      res
+        .status(HttpStatusCode.OK)
+        .json({ success: true, data: updatedComment });
     } catch (error) {
       next(error);
     }

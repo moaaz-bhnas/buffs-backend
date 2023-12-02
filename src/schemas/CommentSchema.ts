@@ -22,6 +22,12 @@ export const CommentSchema = new Schema<IComment>(
       required: false,
       default: null,
     },
+    likes: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      default: [],
+      ref: "User",
+    },
     isDeleted: {
       type: Boolean,
       required: false,

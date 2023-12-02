@@ -6,6 +6,7 @@ export interface IComment {
   userId: Types.ObjectId;
   reviewId: Types.ObjectId;
   parentId: Types.ObjectId | null;
+  likes: Types.ObjectId[];
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
