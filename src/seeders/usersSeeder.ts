@@ -4,7 +4,7 @@ import { ISeeder } from "@/interfaces/seeder/Seeder";
 import { UserRole } from "@/interfaces/user/UserRole";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
-class UsersSeeder implements ISeeder {
+export default class UsersSeeder implements ISeeder {
   private count: number;
 
   constructor(count = 20) {
@@ -16,7 +16,7 @@ class UsersSeeder implements ISeeder {
       username: faker.internet.userName(),
       displayName: faker.internet.displayName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: "harry228",
       role: UserRole.user,
     };
     return user;
@@ -54,5 +54,3 @@ class UsersSeeder implements ISeeder {
     }
   }
 }
-
-export default UsersSeeder;
