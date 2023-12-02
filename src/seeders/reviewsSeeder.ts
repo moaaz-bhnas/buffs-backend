@@ -12,7 +12,7 @@ interface UserReview {
   text: string;
 }
 
-class ReviewsSeeder implements ISeeder {
+export default class ReviewsSeeder implements ISeeder {
   private count: number;
   private randomReviews = [
     { rating: 8, text: "Great movie, highly recommended!" },
@@ -142,5 +142,3 @@ class ReviewsSeeder implements ISeeder {
     }
   }
 }
-
-export default ReviewsSeeder;
