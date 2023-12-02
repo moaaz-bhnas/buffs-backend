@@ -68,7 +68,7 @@ export default class AuthRouter {
   ) {
     try {
       const user = await UserModel.create(req.body);
-      this.sendTokenResponse(user, 201, res);
+      AuthRouter.sendTokenResponse(user, 201, res);
     } catch (error) {
       next(error);
     }
@@ -114,7 +114,7 @@ export default class AuthRouter {
         return next(error);
       }
 
-      this.sendTokenResponse(user, 200, res);
+      AuthRouter.sendTokenResponse(user, 200, res);
     } catch (error) {
       next(error);
     }
