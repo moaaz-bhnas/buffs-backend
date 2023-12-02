@@ -1,8 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import advancedResults from "@/middlewares/advancedResults";
 import { protect } from "@/middlewares/protect";
 import ReviewModel from "@/schemas/ReviewSchema";
-import { Router } from "express";
 import { CreateReviewRequestBody } from "@/interfaces/reviews/CreateReviewRequestBody";
 import ErrorResponse from "@/utils/errorResponse";
 import { RegisteringReview } from "@/interfaces/reviews/RegisteringReview";
@@ -14,7 +13,7 @@ export default class ReviewsRouter {
   // todo: set logger
 
   static init(router: Router): Router {
-    router.get("/", protect, advancedResults(ReviewModel), this.getReviews);
+    router.get("/", advancedResults(ReviewModel), this.getReviews);
     router.post("/", protect, this.createReview);
     router.put("/:reviewId", protect, this.updateReview);
     router.delete("/:reviewId", protect, this.deleteReview);

@@ -7,11 +7,11 @@ import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 // import xss from "xss-clean";
 import cors, { CorsOptions } from "cors";
-import usersRouter from "@/routes/usersRouter";
 import errorHandler from "@/middlewares/errorHandler";
 import ReviewsRouter from "./routes/reviewsRouter";
 import AuthRouter from "./routes/authRouter";
 import UsersRouter from "@/routes/usersRouter";
+import CommentsRouter from "./routes/commentRouter";
 
 const app: Application = express();
 
@@ -68,6 +68,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v1/auth", AuthRouter.init(Router()));
 app.use("/api/v1/users", UsersRouter.init(Router()));
 app.use("/api/v1/reviews", ReviewsRouter.init(Router()));
+app.use("/api/v1/comments", CommentsRouter.init(Router()));
 
 // error handling
 app.use(errorHandler);
