@@ -204,7 +204,7 @@ export default class ReviewsRouter {
 
     // 3. check whether user already liked this review
     const isLiked = review.likers.some(
-      (liker) => req.user && liker.equals(req.user?._id)
+      (liker) => req.user && liker.equals(req.user._id)
     );
     try {
       const updatedReview = await ReviewModel.findByIdAndUpdate(

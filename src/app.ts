@@ -11,7 +11,7 @@ import errorHandler from "@/middlewares/errorHandler";
 import ReviewsRouter from "./routes/reviewsRouter";
 import AuthRouter from "./routes/authRouter";
 import UsersRouter from "@/routes/usersRouter";
-import CommentsRouter from "./routes/commentRouter";
+import CommentsRouter from "./routes/commentsRouter";
 
 const app: Application = express();
 
