@@ -9,15 +9,17 @@ import CommentsSeeder from "./commentsSeeder";
  * Seeds users and reviews data to the database for testing
  * ONLY USE IT IN DEVELOPMENT MODE
  */
-class GlobalSeeder implements ISeeder {
+export default class GlobalSeeder implements ISeeder {
   private usersSeeder = new UsersSeeder();
   private reviewsSeeder = new ReviewsSeeder();
-  private commentsSeeder = new CommentsSeeder(40);
+  private commentsSeeder = new CommentsSeeder();
 
-  async seed(): Promise<void> {
-    await this.usersSeeder.seed();
-    await this.reviewsSeeder.seed();
-    await this.commentsSeeder.seed();
+  async seed(
+    { users, reviews, comments } = { users: 20, reviews: 20, comments: 20 }
+  ): Promise<void> {
+    await this.usersSeeder.seed(users);
+    await this.reviewsSeeder.seed(reviews);
+    await this.commentsSeeder.seed(comments);
   }
 
   async unseed(): Promise<void> {

@@ -6,11 +6,7 @@ import UserModel from "@/schemas/UserSchema";
 import { faker } from "@faker-js/faker";
 
 export default class CommentsSeeder implements ISeeder {
-  private count: number;
-
-  constructor(count = 20) {
-    this.count = count;
-  }
+  private defaultCount = 20;
 
   //   generateComment()
   private randomComments = [
@@ -36,7 +32,7 @@ export default class CommentsSeeder implements ISeeder {
     "I walked out of the theater with a big smile on my face. Pure joy!",
   ];
 
-  async generateComments(count = this.count): Promise<RegisteringComment[]> {
+  async generateComments(count: number): Promise<RegisteringComment[]> {
     // 1. Get users from the database
     const users = await UserModel.find();
 
@@ -70,8 +66,8 @@ export default class CommentsSeeder implements ISeeder {
     return comments;
   }
 
-  async seed(): Promise<void> {
-    const comments = await this.generateComments();
+  async seed(count = this.defaultCount): Promise<void> {
+    const comments = await this.generateComments(count);
 
     try {
       await CommentModel.create(comments);

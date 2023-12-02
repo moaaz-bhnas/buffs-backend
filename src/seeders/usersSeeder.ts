@@ -5,11 +5,7 @@ import { UserRole } from "@/interfaces/user/UserRole";
 import { RegisteringUser } from "@/interfaces/user/RegisteringUser";
 
 export default class UsersSeeder implements ISeeder {
-  private count: number;
-
-  constructor(count = 20) {
-    this.count = count;
-  }
+  private defaultCount = 20;
 
   generateUser(): RegisteringUser {
     const user: RegisteringUser = {
@@ -22,7 +18,7 @@ export default class UsersSeeder implements ISeeder {
     return user;
   }
 
-  generateUsers(count = this.count): RegisteringUser[] {
+  generateUsers(count: number): RegisteringUser[] {
     const users: RegisteringUser[] = [];
 
     for (let i = 0; i < count; i++) {
@@ -34,8 +30,8 @@ export default class UsersSeeder implements ISeeder {
     return users;
   }
 
-  async seed(): Promise<void> {
-    const users = this.generateUsers();
+  async seed(count = this.defaultCount): Promise<void> {
+    const users = this.generateUsers(count);
 
     try {
       await User.create(users);
